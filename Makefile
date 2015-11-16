@@ -1,8 +1,8 @@
-TARGET		= 6502
+TARGET		= nes
 
 CC		= gcc
 
-CFLAGS		= -I./inc
+CFLAGS		= -I./inc --std=c99
 
 LD		= gcc
 LDFLAGS		= 
