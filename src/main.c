@@ -4,14 +4,9 @@
 #include <stdbool.h>
 
 #include "main.h"
-#include "cpu.h"
-#include "cpu_memory.h"
-#include "ppu.h"
-#include "ppu_memory.h"
-#include "apu.h"
-#include "video.h"
 #include "cart.h"
-#include "controller.h"
+#include "error.h"
+#include "debug.h"
 
 
 int main(int argc, char **argv)
@@ -48,8 +43,9 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Error:no rom file given\n");
 		return -1;
 	}
-
+	
 	if(d_flag) {
+		debug_on = true;
 		dump_rom_file(data);
 	}
 

@@ -53,6 +53,7 @@ static const op op_list[] = {
 	{0x1E, "ASL", ABSOLUTE,          X,    3, 7, 0},
 	{0X20, "JSR", ABSOLUTE, NONE, 3, 6, 0}
 	
+	
 };
 
 #endif

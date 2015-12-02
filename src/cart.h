@@ -38,6 +38,9 @@ typedef struct{
 
 uint8_t *open_rom_file(const char *filename);
 rom_file *rom_file_init(const uint8_t *raw_file);
+void rom_file_del(rom_file *r);
 int dump_rom_file(const rom_file *data);
+
+
 
 #endif

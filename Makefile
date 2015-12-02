@@ -2,7 +2,7 @@ TARGET		= nes
 
 CC		= gcc
 
-CFLAGS		= -I./inc --std=c99
+CFLAGS		= -I./src -I./util -I./mappers --std=c99
 
 LD		= gcc
 LDFLAGS		= 
@@ -10,19 +10,22 @@ LDFLAGS		=
 LIBS		= 
 
 SRCD		=./src
-INCD		=./inc
+UTILD		=./util
+MAPD		=./mappers
+
 DEB		=./debug
 REL		=./release
 
-SRC		:= $(wildcard $(SRCD)/*.c)
-INC		:= $(wildcard $(INCD)/*.h)
+
+SRC		:= $(wildcard $(SRCD)/*.c) $(wildcard $(UTILD)/*.c) $(wildcard $(MAPD)/*.c)
+INC		:= $(wildcard $(SRCD)/*.h) $(wildcard $(UTILD)/*.h) $(wildcard $(MAPD)/*.h)
 
 
 #debug
 DCFLAGS		= -g -ggdb3 -O0 -Wall -pedantic -Wextra -Wundef -Wshadow \
 		  -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wwrite-strings \
 		  -Waggregate-return -Wswitch-default -Wswitch-enum \
-		  -Wunreachable-code -Winit-self \
+		  -Wunreachable-code -Winit-self 
 
 DLDFLAGS	= 
 
@@ -34,7 +37,7 @@ DBIN		:=$(DBIND)/$(TARGET)
 
 
 #release
-RCFLAGS		= -O2 -fwhole-program
+RCFLAGS		= -O3 -fwhole-program
 RLDFLAGS	= 
 
 ROBJD		:=$(REL)/obj
@@ -67,10 +70,11 @@ $(DBIN): $(DOBJ)
 	@echo "[LD] linked "$(DOBJ)", executable "$@" created"
 
 $(DOBJ): $(DOBJD)/%.o : $(SRCD)/%.c $(INC)
-	$(MKDIR) $(DEB) $(DOBJD)
+	$(MKDIR) $(DEB) $(DOBJD) 
 	$(CC) $(CFLAGS) $(DCFLAGS) -o $@ -c $<
 	@echo "[CC] Compiled "$<" succesfully"
 
 clean:
-	@$(RM) $(DEB) $(REL) $(SRCD)/*~ $(INCD)/*~ ./*~
+	@$(RM) $(DEB) $(REL) $(SRCD)/*~ $(INCD)/*~ $(MAPD)/*~ $(UTILD)/*~ ./*~
 	@echo "build cleaned"
+

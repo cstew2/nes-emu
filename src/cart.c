@@ -4,7 +4,7 @@
 
 #include "cart.h"
 #include "error.h"
-
+#include "bit_field.h"
 
 uint8_t *open_rom_file(const char *filename)
 {
@@ -35,34 +35,35 @@ rom_file *rom_file_init(const uint8_t *raw_file)
 	r->prg_count = raw_file[++pos]; /* byte 4 for prg rom*/
 	r->chr_count = raw_file[++pos]; /* byte 5 for chr rom */
 	
-	r->mirror = raw_file[++pos] & 1; /* byte 6, bit 0 for mirror */
- 	r->batt_ram = ((raw_file[pos]) >> 1) & 1; /* byte 6, bit 1 for battery ram */
-	r->trainer =  ((raw_file[pos]) >> 2) & 1; /* byte 6, bit 2 for trainer */
-	r->fourscreen = ((raw_file[pos]) >> 3) & 1; /* byte 6, bit 3 for fourscreen VRAM */
-	r->low_mapper = (raw_file[pos] & 0xF0) >> 4; /* 4 high bits from byte 6 for the low bytes*/
+	r->mirror = get_field_bit(raw_file[++pos], 0); /* byte 6, bit 0 for mirror */
+ 	r->batt_ram = get_field_bit(raw_file[pos], 1); /* byte 6, bit 1 for battery ram */
+	r->trainer =  get_field_bit(raw_file[pos], 2); /* byte 6, bit 2 for trainer */
+	r->fourscreen = get_field_bit(raw_file[pos], 3); /* byte 6, bit 3 for fourscreen VRAM */
+	r->low_mapper = get_nibble(raw_file[pos], true); /* 4 high bits from byte 6 for the low bytes*/
 		
-	r->vs_system = raw_file[++pos] & 1; /* byte 7, bit 0 for vs_system */
+	r->vs_system = get_field_bit(raw_file[++pos], 0); /* byte 7, bit 0 for vs_system */
 	r->high_mapper = (raw_file[pos] & 0xF0) >> 4; /* four high bits from byte 7 for the high bytes */
 
 	r->ram_bank_count = raw_file[++pos];
 	r->pal_cart = raw_file[++pos];
 
-	r->submapper = (raw_file[++pos] & 0xF0) >> 4;
-	r->super_high_mapper = (raw_file[pos] & 0x0F) >> 4;
+	r->submapper = get_nibble(raw_file[++pos], true);
+	r->super_high_mapper = get_nibble(raw_file[pos], false);
 	
-	r->prg_high = (raw_file[++pos] & 0x0F) >> 4;
-	r->chr_high = (raw_file[pos] & 0xF0) >> 4;
+	r->prg_high = get_nibble(raw_file[++pos], false);
+	r->chr_high = get_nibble(raw_file[pos], true);
 	
-	r->battery_prg_ram = (raw_file[++pos] & 0xF0) >> 4;
-	r->non_battery_prg_ram = (raw_file[pos] & 0x0F) >> 4;
+	r->battery_prg_ram = get_nibble(raw_file[++pos], true);
+	r->non_battery_prg_ram = get_nibble(raw_file[pos], false);
 			     
-	r->battery_chr_ram = (raw_file[++pos] & 0xF0) >> 4;
-	r->non_battery_chr_ram = (raw_file[pos] & 0x0F) >> 4;
+	r->battery_chr_ram = get_nibble(raw_file[++pos], true);
+	r->non_battery_chr_ram = get_nibble(raw_file[pos], false);
 	
-	r->pal_and_ntsc = (raw_file[++pos] >> 1) & 1;
-	r->ntsc_cart = raw_file[pos] & 1;
-		
-	pos = 16; /* bytes 11-15 are zero */
+	r->pal_and_ntsc = get_field_bit(raw_file[++pos], 1);
+	r->ntsc_cart = get_field_bit(raw_file[pos], 0); /* byte 12 */
+	
+
+	pos = 16; /* bytes 14-15 are zero */
 	
 	/* getting trainer data here */
 		
@@ -71,7 +72,8 @@ rom_file *rom_file_init(const uint8_t *raw_file)
 
 void rom_file_del(rom_file *r)
 {
-	
+	free(r);
+	r = NULL;
 }
 
 int dump_rom_file(const rom_file *data)
@@ -123,3 +125,4 @@ int dump_rom_file(const rom_file *data)
 	       data->ntsc_cart);
 	return 0;
 }
+
