@@ -22,6 +22,7 @@ typedef struct{
 	uint8_t nonmaskable_interupt[2]; /* $FFFA-$FFFB */
 	uint8_t power_on_reset[2];       /* $FFFC-$FFFD */
 	uint8_t break_handler[2];        /* $FFFE-$FFFF */
+	
 }cpu_memory_map;
 
 /* function prototypes */
