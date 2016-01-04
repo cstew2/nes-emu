@@ -22,6 +22,8 @@ typedef struct{
 	uint8_t high_mapper;
 	uint8_t ram_bank_count; /* number of 8kb RAM banks, 0 means 1 bank */
 	bool pal_cart; /* 1 for pal, 0 for NTSC */
+	
+	/* NES 2.0 */
 	uint8_t submapper; /* for conflicting mapps high bits of byte 8*/
 	uint8_t super_high_mapper; /* bits 8-11 for the mapper low bits of byte 8 */
 	uint8_t prg_high; /* 4 extra bits for prg_count low bits of byte 9*/

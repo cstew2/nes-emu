@@ -12,11 +12,15 @@
 
 typedef struct {
 	rom_file r;
+
+	/* hardware */
 	cpu_registers cr;
 	cpu_memory_map cm;
-       	ppu_registers pr;
 	ppu_memory_map pm;
-	
+		
 }nes_emu;
+
+/* funciton prototypes */
+int get_op_code(nes_emu n, uint8_t opcode, uint16_t operand);
 
 #endif

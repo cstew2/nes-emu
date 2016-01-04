@@ -1,8 +1,14 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <stdarg.h>
 
 #include "debug.h"
+
+void debug_init(void)
+{
+	char *filepath = "./nes.log";
+	
+	fp = fopen(filepath, "w");
+}
 
 void debug_message(const char *message, ...)
 {
@@ -23,7 +29,6 @@ void log_info(const char *message, ...)
 			va_list args;
 			va_start (args, message);
 			vfprintf(stderr, message, args);
-			FILE *fp = fopen("./log", "w");
 			if(fp != NULL && ferror(fp)) {
 				vfprintf(fp, message, args);
 			}
@@ -40,7 +45,6 @@ void log_warm(const char *message, ...)
 			va_list args;
 			va_start (args, message);
 			vfprintf(stderr, message, args);
-			FILE *fp = fopen("./log", "w");
 			if(fp != NULL && ferror(fp)) {
 				vfprintf(fp, message, args);
 			}
@@ -59,7 +63,6 @@ void log_err(const char *message, ...)
 			vprintf (message, args);
 			va_end (args);
 			vfprintf(stderr, message, args);
-			FILE *fp = fopen("./log", "w");
 			if(fp != NULL && ferror(fp)) {
 				vfprintf(fp, message, args);
 			}

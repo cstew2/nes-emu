@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 	bool d_flag = false;
 	bool o_flag = false;
 
-	char *filename = malloc(sizeof(char) * MAX_BUFFER);
+	char *filename = calloc(sizeof(char), MAX_BUFFER);
 
 	if(argc < 2) {
 	        print_help();
@@ -36,8 +36,10 @@ int main(int argc, char **argv)
 	}
 		
 	rom_file *data;
+	uint8_t *raw;
 	if(o_flag) {
-		data = rom_file_init(open_rom_file(filename));
+		raw = open_rom_file(filename);
+		data = rom_file_init(raw);
 	}
 	else{
 		fprintf(stderr, "Error:no rom file given\n");
@@ -50,6 +52,8 @@ int main(int argc, char **argv)
 	}
 
 	free(filename);
+	free(raw);
+	free(data);
 	return 0;
 }
 
@@ -58,6 +62,6 @@ void print_help(void)
 	printf("nes usage: nes [OPTIONS]...\n\n"
 	       "Options\n"
 	       "-d \t debug on\n"
-	       "-o \t open [FILE]\n"
+	       "-o \t open \"FILE\"\n"
 		"");
 }

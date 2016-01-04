@@ -15,4 +15,7 @@ typedef struct {
 	/* $3F20-$3FFF mirrors of $3F00-$3F1F */
 }ppu_memory_map;
 
+
+
+
 #endif

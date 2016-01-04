@@ -8,6 +8,7 @@
 
 uint8_t *open_rom_file(const char *filename)
 {
+	check_memory(filename);
 	FILE *fp = NULL;
 	size_t size;
 	fp = fopen(filename, "rb");

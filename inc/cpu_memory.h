@@ -9,10 +9,10 @@ typedef struct{
 	uint8_t zero_page[256];              /* $0000-$00FF 256 bytes*/
 	uint8_t stack_memory[256];           /* $0100-$01FF  256 bytes*/
 	uint8_t cpu_ram[1536];                /* $0200-$0FFF 1536 bytes */
-	/* $0800-$17FF 3 mirrors of $0000-$07FF every 2048 bytes*/
+	/* $0800-$1FFF 3 mirrors of $0000-$07FF every 2048 bytes*/
 	
 	/* ppu registers  $2000-$2007 8 bytes*/
-	/* $2008-3FFF 8184 mirrors of PPU registers every 8 bytes*/
+	/* $2008-3FFF 1023 mirrors of PPU registers every 8 bytes*/
 	
 	/* apu registers $4000-$4017 16 bytes */
         /* io registers $4018 -$401F 16 bytes  */

@@ -15,11 +15,12 @@ cpu_memory_map *memory_init(void)
 
 int load_cpu_rom(cpu_memory_map *m, uint8_t *prg_rom, bool upper, bool lower)
 {
-	
 	if(upper) {
+		log_info("INFO: load PRG ROM into upper bank");
 		m->prg_rom_upper = prg_rom;
 	}
 	if(lower) {
+		log_info("INFO: load PRG ROM into lower bank");
 		m->prg_rom_lower = prg_rom;
 	}
 
@@ -28,7 +29,7 @@ int load_cpu_rom(cpu_memory_map *m, uint8_t *prg_rom, bool upper, bool lower)
 
 uint8_t get_cpu_memory(cpu_memory_map *m, uint16_t addr)
 {
-	
+	log_info("INFO: load cpu memory at address: %X\n", addr);
 	if(addr < 8192) { /* main cpu ram */
 		int i = addr % 2048;
 		if(addr < 256) {
@@ -56,13 +57,14 @@ uint8_t get_cpu_memory(cpu_memory_map *m, uint16_t addr)
 		}
 	}
 	else {
-		log_err("bad address given for CPU memory read:%X\n", addr);
+		log_err("ERROR: bad address given for CPU memory read: %X\n", addr);
 	}
 	return 0; /* use a better value */
 }
 
 int set_cpu_memory(cpu_memory_map *m, uint16_t addr, uint8_t write)
 {
+	log_info("INFO: set cpu memory to %X at address: %X\n", write, addr);
 	if(addr < 8192) { /* main cpu ram */
 		int i = addr % 2048;
 		if(addr < 256) {
@@ -90,7 +92,7 @@ int set_cpu_memory(cpu_memory_map *m, uint16_t addr, uint8_t write)
 		}
 	}
 	else {
-		log_err("bad address given for CPU memory write:%X\n", addr);
+		log_err("ERROR: bad address given for CPU memory write:%X\n", addr);
 	}
 	return 0; /* use a better value */
 }
