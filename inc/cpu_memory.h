@@ -25,7 +25,7 @@ typedef struct{
 }cpu_memory_map;
 
 /* function prototypes */
-cpu_memory_map *memory_init(void);
+cpu_memory_map *cpu_memory_init(void);
 int load_cpu_rom(cpu_memory_map *m, uint8_t *prg_rom, bool upper, bool lower);
 
 uint8_t get_cpu_memory(cpu_memory_map *m, uint16_t addr);

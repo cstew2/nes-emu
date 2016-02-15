@@ -11,16 +11,18 @@
 #include "cart.h"
 
 typedef struct {
-	rom_file r;
+	rom_file rf;
 
 	/* hardware */
-	cpu_registers cr;
+	cpu_registers r;
 	cpu_memory_map cm;
 	ppu_memory_map pm;
 		
 }nes_emu;
 
 /* funciton prototypes */
-int get_op_code(nes_emu n, uint8_t opcode, uint16_t operand);
+int interpret_op(nes_emu *e, uint8_t opcode, uint16_t operand);
+int get_opcode_bits(const uint8_t byte, const uint8_t offset);
+int start_nes_emu(rom_file f);
 
 #endif

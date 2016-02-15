@@ -4,7 +4,7 @@
 #include "debug.h"
 #include "error.h"
 
-cpu_memory_map *memory_init(void)
+cpu_memory_map *cpu_memory_init(void)
 {
 	cpu_memory_map *m = NULL;
 	m = malloc(sizeof(cpu_memory_map));

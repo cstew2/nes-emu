@@ -16,7 +16,11 @@ typedef struct {
 	uint8_t stack_pointer;
 	
 	uint8_t status; /* 0-carry, 1-zero, 2-interrupt, 3-decimal, 4-unused, 5-unused, 6-overflow, 7-negative */
+
 	uint64_t ticks;
+	uint16_t temp_op;
+	
+	
 }cpu_registers;
 
 
@@ -25,37 +29,5 @@ cpu_registers *cpu_registers_init(void);
 void cpu_reset(cpu_registers *r);
 
 
-uint8_t get_accumulator(cpu_registers *r);
-void set_accumulator(cpu_registers *r, uint8_t i);
-
-uint8_t get_x_index(cpu_registers *r);
-void set_x_index(cpu_registers *r, uint8_t i);
-
-uint8_t get_y_index(cpu_registers *r);
-void set_y_index(cpu_registers *r, uint8_t i);
-
-uint8_t get_program_counter(cpu_registers *r);
-void set_program_counter(cpu_registers *r, uint8_t i);
-
-uint8_t get_stack_pointer(cpu_registers *r);
-void set_stack_pointer(cpu_registers *r, uint8_t i);
-
-bool get_carry(cpu_registers *r);
-void set_carry(cpu_registers *r, bool b);
-
-bool get_zero(cpu_registers *r);
-void set_zero(cpu_registers *r, bool b);
-
-bool get_interrupt(cpu_registers *r);
-void set_interrupt(cpu_registers *r, bool b);
-
-bool get_overflow(cpu_registers *r);
-void set_overflow(cpu_registers *r, bool b);
-
-bool get_negative(cpu_registers *r);
-void set_negative(cpu_registers *r, bool b);
-
-uint64_t get_ticks(cpu_registers *r);
-void set_ticks(cpu_registers *r, uint8_t i);
 
 #endif

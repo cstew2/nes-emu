@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-bool get_field_bit(uint8_t byte, uint8_t offset)
+bool get_field_bit(const uint8_t byte, const uint8_t offset)
 {
 	return ((byte >> offset) & 1);
 }
@@ -13,7 +13,7 @@ void set_field_bit(uint8_t byte, uint8_t offset, bool on)
 	byte = ((byte >> offset) & on) << offset;
 }
 
-uint8_t get_nibble(uint8_t byte, bool higher)
+uint8_t get_nibble(const uint8_t byte, const bool higher)
 {
 	if(higher) {
 		return (byte & 0xF0) >> 4;

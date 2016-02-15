@@ -2,12 +2,14 @@
 
 #include "nes.h"
 
-int get_op_code(nes_emu e, uint8_t opcode, uint16_t operand)
+int start_nes_emu(rom_file *rf)
 {
-	switch(opcode) {
-		
-	case 0x00: return brk(e->r); break;
-	case 0x01: return ora_indx(e->r, operand); break;
-	case 0x05: return ora_zp(e->r, operand); break;
-	}
+	nes_emu *e = malloc(sizeof(nes_emu));
+	e->rf = rf;
+	e->r = cpu_registers_init();
+	e->cm = cpu_memory_init();
+	e->pm = ppu_memory_init();
+
 }
+
+
