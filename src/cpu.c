@@ -9,19 +9,13 @@ cpu_registers *cpu_registers_init(void)
 	cpu_registers *r = calloc(1, sizeof(cpu_registers));
 	
 	/*set inital states of registers*/
-	set_program_counter(r, 0x34);
-	set_accumulator(r, 0x00);
-	set_x_index(r, 0x00);
-	set_y_index(r, 0x00);
-	set_stack_pointer(r, 0xFD);
+	r->program_counter = 0x34;
+	r->stack_pointer = 0xFD;
+	
+	r->condition_codes = 0;
+	set_field_bit(r->condition_codes, 2, true);
 
-	set_carry(r, false);
-	set_zero(r, false);
-	set_interrupt(r, true);
-	set_overflow(r, false);
-	set_negative(r, false);
-
-	set_ticks(r, 0);
+	r->ticks = 0;
 	
 	return r;
 }
@@ -29,6 +23,17 @@ cpu_registers *cpu_registers_init(void)
 void cpu_reset(cpu_registers *r)
 {
 	/* default values */ 
-	set_stack_pointer(r, get_stack_pointer(r) - 0x03);
-	set_interrupt(r, true);
+	r->stack_pointer -= 0x03;
+	set_field_bit(r->condition_codes, 2, true);
+}
+
+int fetch(cpu_registers *r, cpu_memory_map *cm)
+{
+	r->instruction = get_cpu_memory(cm, r->program_counter);
+	
+}
+
+int execute(cpu_registers *r)
+{
+	
 }

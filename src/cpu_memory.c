@@ -8,6 +8,7 @@ cpu_memory_map *cpu_memory_init(void)
 {
 	cpu_memory_map *m = NULL;
 	m = malloc(sizeof(cpu_memory_map));
+	
 	check_memory(m->prg_rom_lower = calloc(16384, sizeof(uint8_t)));
 	check_memory(m->prg_rom_upper = calloc(16384, sizeof(uint8_t)));
 	return m;
@@ -19,7 +20,7 @@ int load_cpu_rom(cpu_memory_map *m, uint8_t *prg_rom, bool upper, bool lower)
 		log_info("INFO: load PRG ROM into upper bank");
 		m->prg_rom_upper = prg_rom;
 	}
-	if(lower) {
+	else if(lower) {
 		log_info("INFO: load PRG ROM into lower bank");
 		m->prg_rom_lower = prg_rom;
 	}
