@@ -38,7 +38,7 @@ void log_info(const char *message, ...)
 	}
 }
 
-void log_warm(const char *message, ...)
+void log_warn(const char *message, ...)
 {
 	if(debug_on) {
 		if(message != NULL) {

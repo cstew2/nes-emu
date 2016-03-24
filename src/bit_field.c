@@ -32,3 +32,27 @@ void set_nibble(uint8_t byte, uint8_t mask, bool higher)
 		byte = byte & mask;
 	}
 }
+
+uint8_t get_half_word(uint16_t word, const bool higher)
+{
+	if(higher) {
+		return (word & 0xFF00) >> 8;
+	}
+	return (word & 0x00FF);
+}
+
+void set_half_word(uint16_t word, uint8_t mask, bool higher)
+{
+	if(higher) {
+		word = ((word >> 8) & mask) << 8;
+	}
+	else {
+		word = word & mask;
+	}	
+}
+
+uint16_t combine(uint8_t low, uint8_t high)
+{
+	uint16_t w = high;
+	return (w << 8) | low;
+}

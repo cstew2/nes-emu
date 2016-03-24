@@ -30,7 +30,8 @@ typedef struct {
 cpu_registers *cpu_registers_init(void);
 void cpu_reset(cpu_registers *r);
 int fetch(cpu_registers *r, cpu_memory_map *cm);
-int execute(cpu_registers *r);
+int execute(cpu_registers *r, cpu_memory_map *cm);
 
-
+uint8_t get_opcode(uint8_t);
+uint8_t get_operand(uint8_t);
 #endif

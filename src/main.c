@@ -48,9 +48,11 @@ int main(int argc, char **argv)
 	
 	if(d_flag) {
 		debug_on = true;
-		dump_rom_file(data);
+		rom_file_info(data);
 	}
 
+	
+	
 	free(filename);
 	free(raw);
 	free(data);

@@ -77,7 +77,7 @@ void rom_file_del(rom_file *r)
 	r = NULL;
 }
 
-int dump_rom_file(const rom_file *data)
+int rom_file_info(const rom_file *data)
 {
 	printf("Header: %s\n"
 	       "16kB ROM pages: %i\n"
@@ -126,4 +126,3 @@ int dump_rom_file(const rom_file *data)
 	       data->ntsc_cart);
 	return 0;
 }
-

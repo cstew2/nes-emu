@@ -12,5 +12,5 @@ int start_nes_emu(rom_file *rf)
 
 int main_nes_loop(nes_emu *e)
 {
-
+	
 }
