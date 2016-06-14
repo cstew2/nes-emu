@@ -8,7 +8,7 @@ bool get_field_bit(const uint8_t byte, const uint8_t offset)
 	return ((byte >> offset) & 1);
 }
 
-void set_field_bit(uint8_t byte, uint8_t offset, bool on)
+void set_field_bit(uint8_t byte, uint8_t const offset, const bool on)
 {
 	byte = ((byte >> offset) & on) << offset;
 }
@@ -23,7 +23,7 @@ uint8_t get_nibble(const uint8_t byte, const bool higher)
 	}
 	
 }
-void set_nibble(uint8_t byte, uint8_t mask, bool higher)
+void set_nibble(uint8_t byte, uint8_t const mask, const bool higher)
 {
 	if(higher) {
 		byte = ((byte >> 4) & mask) << 4;
@@ -41,7 +41,7 @@ uint8_t get_half_word(uint16_t word, const bool higher)
 	return (word & 0x00FF);
 }
 
-void set_half_word(uint16_t word, uint8_t mask, bool higher)
+void set_half_word(uint16_t word, uint8_t const mask, const bool higher)
 {
 	if(higher) {
 		word = ((word >> 8) & mask) << 8;
@@ -51,7 +51,7 @@ void set_half_word(uint16_t word, uint8_t mask, bool higher)
 	}	
 }
 
-uint16_t combine(uint8_t low, uint8_t high)
+uint16_t combine(const uint8_t low, const uint8_t high)
 {
 	uint16_t w = high;
 	return (w << 8) | low;

@@ -28,10 +28,16 @@ typedef struct {
 
 /* function prototypes */
 cpu_registers *cpu_registers_init(void);
+
+void set_carry(cpu_registers *r, bool flag);
+void set_zero(cpu_registers *r, bool flag);
+void set_interrupt(cpu_registers *r, bool flag);
+void set_break(cpu_registers *r, bool flag);
+void set_overflow(cpu_registers *r, bool flag);
+void set_negative(cpu_registers *r, bool flag);
+
 void cpu_reset(cpu_registers *r);
 int fetch(cpu_registers *r, cpu_memory_map *cm);
 int execute(cpu_registers *r, cpu_memory_map *cm);
 
-uint8_t get_opcode(uint8_t);
-uint8_t get_operand(uint8_t);
 #endif

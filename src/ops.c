@@ -1,11 +1,84 @@
 #include "ops.h"
 
+/* addressing modes */
+uint8_t op_zero_page(cpu_registers *r, cpu_memory_map *cm)
+{
+	return get_cpu_memory(get_cpu_memory(cm, r->program_counter++)) & 0x00FF);
+}
+
+uint8_t op_zero_page_x(cpu_registers *r, cpu_memory_map *cm)
+{
+	return get_cpu_memory(cm,
+	      (get_cpu_memory(cm, r->program_counter++) + r->x_index) & 0x00FF);
+}
+
+uint8_t op_zero_page_y(cpu_registers *r, cpu_memory_map *cm)
+{
+	return get_cpu_memory(cm,
+	      (get_cpu_memory(cm, r->program_counter++) + r->y_index) & 0x00FF);
+}
+
+uint8_t op_absolute(cpu_registers *r, cpu_memory_map *cm)
+{
+	return get_cpu_memmory(cm, combine(get_cpu_memory(cm, r->program_counter++),
+					   get_cpu_memory(cm, r->program_counter++))));
+}
+
+uint8_t op_absolute_x(cpu_registers *r, cpu_memory_map *cm, bool boundary)
+{
+	uint16_t operand =  combine(get_cpu_memory(cm, r->program_counter++),
+				    get_cpu_memory(cm, r->program_counter++));
+	boundry = !((operand + r->x_index) & 0xFF00) == (operand & 0xFF00);
+	return get_cpu_memory(cm, operand + r->x_index);
+}
+
+uint8_t op_absolute_y(cpu_registers *r, cpu_memory_map *cm, bool boundary)
+{
+        uint16_t operand = combine(get_cpu_meory(cm, r->program_counter++),
+				   get_cpu_mmory(cm, r->program_counter++));
+	boundry = !((operand + r->y_index) & 0xFF00) == (operand & 0xFF00);
+	return get_cpu_memory(cm, operand + r->y_index);
+}
+
+uint16_t op_indirect(cpu_registers *r, cpu_memory_map *cm)
+{
+	uint16_t addr = combine(
+		get_cpu_memory(cm, r->program_counter++),
+		get_cpu_memory(cm, r->program_counter++));
+        return combine(
+		get_cpu_memory(cm, addr),
+		get_cpu_memory(cm, addr+1));
+}
+	
+uint8_t op_immediate(cpu_registers *r, cpu_memory_map *cm)
+{
+	return get_cpu_memory(cm, r->program_counter++);
+}
+
+uint8_t op_indirect_x(cpu_registers *r, cpu_memory_map *cm)
+{
+        uint16_t addr = (get_cpu_memory(cm, r->program_counter++) + r->x_index) & 0xFF;
+	return get_cpu_memory(cm, combine(
+			     get_cpu_memory(cm, addr),
+			     get_cpu_memory(cm, addr+1)));
+}
+
+uint8_t op_indirect_y(cpu_registers *r, cpu_memory_map *cm, bool boundary)
+{
+	uint16_t addr = get_cpu_memory(cm, r->program_counter++);
+	boundary = !((addr + r->y_index) & 0xFF00) == (operand & 0xFF00);
+	return get_cpu_memory(combine(addr, addr+1)) + r->y_index;
+}
+
+
+/* opcodes */
+
 /* System */
 void op_brk(cpu_registers *r, cpu_memory_map *cm)
 {
-	op_ph(r, cm, get_half_word(++r->program_counter, true));
+	op_ph(r, cm, get_half_word(r->program_counter++, true));
 	r->program_counter++;
-	op_ph(r, cm, get_half_word(++r->program_counter, false));
+	op_ph(r, cm, get_half_word(r->program_counter++, false));
 	op_ph(r, cm, r->condition_codes | 0x04); //push with b flag set
 	set_half_word(r->program_counter, get_cpu_memory(cm, 0xFFFE), false);
 	set_half_word(r->program_counter, get_cpu_memory(cm, 0xFFFF), true);
@@ -13,19 +86,134 @@ void op_brk(cpu_registers *r, cpu_memory_map *cm)
 
 
 /* storage */
-uint8_t op_ld(cpu_registers *r, uint16_t operand)
+uint8_t op_ld(cpu_registers *r, uint8_t operand)
 {
-	set_field_bit(r->condition_codes, 8, operand < 0x7F);
-	set_field_bit(r->condition_codes, 1, operand == 0);
+        set_negative(r, (operand >> 8) & 1);
+	set_zero(r, operand == 0);
 	return operand;
 }
 
-uint8_t op_st(cpu_registers *r, uint16_t operand)
+uint8_t op_t(cpu_registers *r, uint8_t operand)
 {
-	
+        set_negative(r, (operand >> 8) & 1);
+	set_zero(r, operand == 0);
+	return operand;
 }
 
-uint8_t op_t(cpu_registers *r, uint16_t operand)
+/* bitwise */
+uint8_t op_and(cpu_registers *r, uint8_t operand)
+{
+	operand &= r->accumulator;
+	set_negative(r, (operand >> 8) & 1);
+	set_zero(r, operand == 0);
+	return operand;
+}
+
+uint8_t op_asl(cpu_registers *r)
+{
+	uint8_t u = r->accumulator << 1;
+	set_zero(r, u == 0);
+	set_negative(r, get_field_bit(u, 7));
+	return r->accumulator << 1;
+}
+
+void op_bit(cpu_registers *r, uint8_t operand)
+{
+	operand &= r->accumulator;
+	set_zero(r, operand);
+	set_negative(r, get_bit_field(operand, 7));
+	set_overflow(r, get_bit_field(operand, 6));
+}
+
+uint8_t op_eor(cpu_registers *r, uint8_t operand)
+{
+	operand |= r->accumulator;
+	set_zero(r, operand == 0);
+	set_negative(r, get_bit_field(operand, 7));
+        return operand;
+}
+
+uint8_t op_lsr(cpu_registers *r, uint8_t operand)
+{
+	set_carry(get_field_bit(operand, 0));
+	operand >> 1;
+	set_negative(0);
+	set_zero(operand == 0);
+	return operand;
+}
+
+uint8_t op_ora(cpu_registers *r, uint8_t operand)
+{
+	operand |= r->accumulator;
+	set_negative(get_field_bit(operand, 7));
+	set_zero(operand == 0);
+}
+
+uint8_t op_rol(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+uint8_t op_ror(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+/* branch */
+uint16_t op_b(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+/* math */
+uint8_t op_sbc(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+uint8_t op_adc(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+uint8_t op_de(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+uint8_t op_in(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+/* jump */
+uint8_t op_jmp(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+uint8_t op_jsr(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+uint8_t op_rti(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+uint8_t op_rts(cpu_registers *r, uint8_t operand)
+{
+
+}
+
+/* stack */
+uint16_t op_pl(cpu_registers *r, cpu_memory_map *m)
+{
+
+}
+
+uint16_t op_ph(cpu_registers *r, cpu_memory_map *m, uint8_t data)
 {
 
 }

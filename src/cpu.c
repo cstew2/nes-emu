@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 #include "error.h"
 #include "debug.h"
@@ -25,6 +27,31 @@ cpu_registers *cpu_registers_init(void)
 	return r;
 }
 
+void set_carry(cpu_registers *r, bool flag)
+{
+	set_bit_field(r->condition_codes, 0, flag);
+}
+void set_zero(cpu_registers *r, bool flag)
+{
+	set_bit_field(r->condition_codes, 1, flag);
+}
+void set_interrupt(cpu_registers *r, bool flag)
+{
+	set_bit_field(r->condition_codes, 2, flag);
+}
+void set_break(cpu_registers *r, bool flag)
+{
+	set_bit_field(r->condition_codes, 4, flag);
+}
+void set_overflow(cpu_registers *r, bool flag)
+{
+	set_bit_field(r->condition_codes, 6, flag);
+}
+void set_negative(cpu_registers *r, bool flag)
+{
+	set_bit_field(r->condition_codes, 7, flag);
+}
+
 void cpu_reset(cpu_registers *r)
 {
 	/* default values */ 
@@ -45,7 +72,7 @@ int fetch(cpu_registers *r, cpu_memory_map *cm)
 int execute(cpu_registers *r, cpu_memory_map *cm)
 {
         uint8_t counter = 0;
-	uint16_t operand = 0;
+	bool boundry = false;
 	
 	switch(r->instruction) {
 		//system
@@ -60,79 +87,137 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 
 		//storage
 	case 0xA9://LDA immediate
-		r->accumulator = op_ld(r, get_cpu_memory(cm, ++r->program_counter));
+		r->accumulator = op_ld(r, op_immediate(r, cm));
 		counter -= 2;
 		break;
 
 	case 0xA5://LDA zero page
-		r->accumulator = op_ld(r, get_cpu_memory(cm, get_cpu_memory(cm ,++r->program_counter)));
+		r->accumulator = op_ld(r, op_zero_page(r, cm));
 		counter -= 3;
 		break;
-
+		
 	case 0xB5://LDA zero page x
-		r->accumulator = op_ld(r, get_cpu_memory(cm,
-				       get_cpu_memory(cm, ++(r->program_counter) + r->x_index)));
+		r->accumulator = op_ld(r, op_zero_page_x(r, cm));
 		counter -= 4;
 		break;
 		
 	case 0xAD://LDA absolute
-		operand = combine(get_cpu_memory(cm, get_cpu_memory(cm,++(r->program_counter))),
-				  get_cpu_memory(cm, get_cpu_memory(cm,++(r->program_counter))));
-		r->accumulator = op_ld(r, operand);
+		r->accumulator = op_ld(r, op_absolute(r, cm));
 		counter -= 4;
 		break;
 		
 	case 0xBD://LDA absolute x
-		operand = combine(get_cpu_memory(cm, ++(r->program_counter)),
-				  get_cpu_memory(cm, ++(r->program_counter)));
-		r->accumulator = op_ld(r, operand + r->x_index);
-		counter -= ((operand + r->x_index - operand) > 0xFF) ? 4 : 5;
+	        r->accumulator = op_ld(r, op_absolute_x(r, cm, boundary));
+		counter -= boundary ? 5 : 4;
 		break;
 		
 	case 0xB9://LDA absolute y
-		operand = combine(get_cpu_memory(cm, ++(r->program_counter)),
-				  get_cpu_memory(cm, ++(r->program_counter)));
-		r->accumulator = op_ld(r, operand + r->y_index);
-		counter -= ((operand + r->y_index - operand) > 0xFF) ? 4 : 5;	
+		r->accumulator = op_ld(r, op_absolute_y(r, cm, boundary));
+		counter -= boundary ? 5 : 4;	
 		break;
 		
 	case 0xA1://LDA indirect x
-		operand = get_cpu_memory(cm, ++r->program_counter) + r->x_index;
-		r->accumulator = op_ld(r, get_cpu_memory(cm, get_cpu_memory(cm, operand)));
+	        r->accumulator = op_ld(r, op_indirect_y(r, cm, boundary));
 		counter -= 6;
 		break;
 	
 	case 0xB1://LDA indirect y
-		operand = get_cpu_memory(cm, ++r->program_counter);
-		r->accumulator = op_ld(r, get_cpu_memory(cm, get_cpu_memory(cm, operand)) + r->y_index);
-		counter -= ((operand + r->x_index - operand) > 0xFF) ? 4 : 5;
+	        r->accumulator = op_ld(r, op_indirect_y(r, cm, boundary));
+		counter -= boundary ? 6 : 5;
 		break;
 
 	case 0xA2://LDX immediate
-
+		r->x_index = op_ld(r, op(r, cm));
+		counter -= 2;
 		break;
 
 	case 0xA6://LDX zero page
-
+		r->x_index = op_ld(r, op_zero_page(r, cm));
+		counter -= 3;
 		break;
 
 	case 0xB6://LDX zero page x
-
+		r->x_index = op_ld(r, op_zero_page_x(r, cm));
+		counter -= 4;
 		break;
 
-	case 0xAE://absolute
-
+	case 0xAE://LDX absolute
+		r->x_index = op_ld(r, op_absolute(r, cm));
+		counter -= 4;
 		break;
 
-	case 0xBE://absolute, x
+	case 0xBE://LDX absolute, x
+		r->x_index = op_ld(r, op__absolute_x(r, cm));
+		counter -= boundary ? 4 : 5;
+		break;
 
+	case 0xA0://LDY immediate
+		r->y_index = op_ld(r, op_immediate(r, cm));
+		counter -= 2;
+		break;
+			
+	case 0xA0://LDY zero page
+		r->y_index = op_ld(r, op_zero_page(r, cm));
+		counter -= 3;
+		break;
+			
+	case 0xA0://LDY zero page x
+		r->y_index = op_ld(r, op_zero_page_x(r, cm));
+		counter -= 4;
+		break;
+
+	case 0xA0://LDY absolute
+		r->y_index = op_ld(r, op_absolute(r, cm));
+		counter -= 4;
+		break;
+
+	case 0xA0://LDY absolute x
+		r->y_index = op_ld(r, op_absolute_x(r, cm));
+		counter -= boundry ? 4 : 5;
 		break;
 		
+	case 0x85://STA zero page
+		r->accumulator = op_zero_page(r, cm);
+		counter -= 3;
+		break;
+
+	case 0x95://STA zero page x
+		r->accumulator = op_zero_page_x(r, cm);
+		counter -= 4;
+		break;
+		
+	case 0x8D://STA absolute
+		r->accumulator = op_absolute(r, cm);
+		counter -= 4;
+		break;
+		
+	case 0x9D://STA absolute x
+		r->accumulator = op_absolute_x(r, cm);
+		counter -= boundry ? 4 : 5;
+		break;
+			
+	case 0x99://STA absolute y
+		r->accumulator = op_absolute_y(r, cm);
+		counter -= boundry ? 4 : 5;
+		break;
+
+	case 0x81://STA indirect x
+		r->accumulator = op_indirect_x(r, cm);
+		counter -= 6;
+		break;
+
+	case 0x81://STA indirect y
+		r->accumulator = op_indirect_y(r, cm);
+		counter -= boundry ? 5 : 6;
+		break;
+
+	case 0x://
+		
+		break;
 		
 	default://illegal opcode
 		log_warn("Illegal opcode at %X", r->instruction);
 		break;
-	
 	}
 	return counter;
 }
