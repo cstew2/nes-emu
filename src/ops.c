@@ -23,11 +23,26 @@ uint16_t mem_absolute_x(cpu_registers *r, cpu_memory_map *cm)
 		       get_cpu_memory(cm, r->program_counter+1)) + r->x_index;
 }
 
+uint16_t mem_relative(cpu_registers *r, cpu_memory_map *cm, bool boundary)
+{
+	uint16_t addr = get_cpu_memory(cm, r->program_counter);
+	boundary = !((addr) & 0xFF00) == (addr & 0xFF00);
+	
+	return addr;
+}
+
+uint16_t mem_indirect(cpu_registers *r, cpu_memory_map *cm)
+{
+	uint16_t addr = combine(get_cpu_memory(cm, r->program_counter),
+				get_cpu_memory(cm, r->program_counter+1));
+	r->program_counter =+ 2;
+	return combine(addr, (addr + 1 & 0xFF00));
+}
 
 /* addressing modes */
 uint8_t op_zero_page(cpu_registers *r, cpu_memory_map *cm)
 {
-	return get_cpu_memory(cm, mem_zero_page(r, cm);
+	return get_cpu_memory(cm, mem_zero_page(r, cm));
 }
 
 uint8_t op_zero_page_x(cpu_registers *r, cpu_memory_map *cm)
@@ -85,9 +100,8 @@ uint8_t op_immediate(cpu_registers *r, cpu_memory_map *cm)
 uint8_t op_indirect_x(cpu_registers *r, cpu_memory_map *cm)
 {
         uint16_t addr = (get_cpu_memory(cm, r->program_counter++) + r->x_index) & 0xFF;
-	return get_cpu_memory(cm, combine(
-			     get_cpu_memory(cm, addr),
-			     get_cpu_memory(cm, addr+1)));
+	return get_cpu_memory(cm, combine(get_cpu_memory(cm, addr),
+					  get_cpu_memory(cm, addr+1)));
 }
 
 uint8_t op_indirect_y(cpu_registers *r, cpu_memory_map *cm, bool boundary)
@@ -167,9 +181,9 @@ uint8_t op_and(cpu_registers *r, uint8_t operand)
 uint8_t op_asl(cpu_registers *r, uint8_t operand)
 {
 	operand <<= 1;
-	set_zero(r, u == 0);
-	set_negative(r, get_field_bit(u, 7));
-	return u;
+	set_zero(r, operand == 0);
+	set_negative(r, get_field_bit(operand, 7));
+	return operand;
 }
 
 void op_bit(cpu_registers *r, uint8_t operand)
@@ -265,12 +279,25 @@ uint8_t op_in(cpu_registers *r, uint8_t operand)
 }
 
 /* stack */
-void op_pl(cpu_registers *r, cpu_memory_map *m)
+uint8_t op_pl(cpu_registers *r, cpu_memory_map *m)
 {
-	get_cpu_memory(m, r->stack_pointer++);
+	return get_cpu_memory(m, r->stack_pointer++);
 }
 
 void op_ph(cpu_registers *r, cpu_memory_map *m, uint8_t operand)
 {
 	set_cpu_memory(m, r->stack_pointer--, operand);
 }
+
+/* branch and jumps */
+uint8_t op_b(cpu_registers *r, cpu_memory_map *cm, bool condition)
+{
+	if(!condition) {
+		return 2;
+	}
+	bool boundary = false;
+	uint16_t addr = mem_relative(r, cm, &boundary);
+	r->program_counter = addr;
+	return boundary ? 3 : 4;
+}
+

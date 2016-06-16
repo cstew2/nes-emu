@@ -14,6 +14,8 @@ uint8_t mem_zero_page(cpu_registers *r, cpu_memory_map *cm);
 uint8_t mem_zero_page_x(cpu_registers *r, cpu_memory_map *cm);
 uint16_t mem_absolute(cpu_registers *r, cpu_memory_map *cm);
 uint16_t mem_absolute_x(cpu_registers *r, cpu_memory_map *cm);
+uint16_t mem_relative(cpu_registers *r, cpu_memory_map *cm, bool boundary);
+uint16_t mem_indirect(cpu_registers *r, cpu_memory_map *cm);
 
 /* addressing modes */
 uint8_t op_zero_page(cpu_registers *r, cpu_memory_map *cm);
@@ -56,7 +58,9 @@ uint8_t op_de(cpu_registers *r, uint8_t operand);
 uint8_t op_in(cpu_registers *r, uint8_t operand);
 
 /* stack */
-void op_pl(cpu_registers *r, cpu_memory_map *m);
+uint8_t op_pl(cpu_registers *r, cpu_memory_map *m);
 void op_ph(cpu_registers *r, cpu_memory_map *m, uint8_t operand);
 
+/* branch */
+uint8_t op_b(cpu_registers *r, cpu_memory_map *cm, bool condition);
 #endif

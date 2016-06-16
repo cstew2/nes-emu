@@ -445,29 +445,29 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 
 	case 0x06://ASL zero page
 		addr =  mem_zero_page(r, cm);
-		set_cpu_memory(cm, addr, op_and(op_zero_page(r, cm)));
+		set_cpu_memory(cm, addr, op_and(r, op_zero_page(r, cm)));
 		counter -= 5;
 		break;
 
 	case 0x16://ASL zero page, x
 		addr = mem_zero_page_x(r, cm);
-		set_cpu_memory(cm, addr, op_asl(op_zero_page_x));
+		set_cpu_memory(cm, addr, op_asl(r, op_zero_page_x(r, cm)));
 		counter -= 6;
 		break;
 		
 	case 0x0E://ASL absolute
 		addr = mem_absolute(r, cm);
-		set_cpu_memory(cm, addr, op_asl(op_absolute(r, cm)));
+		set_cpu_memory(cm, addr, op_asl(r, op_absolute(r, cm)));
 		counter -= 6;
 		break;
 
 	case 0x24://BIT zero page
-		op_bit(op_zero_page(r, cm));
+		op_bit(r, op_zero_page(r, cm));
 		counter -= 3;
 		break;
 
 	case 0x2C://BIT absolute
-		op_bit(op_absolute(r, cm));
+		op_bit(r, op_absolute(r, cm));
 		counter -= 4;
 		break;
 
@@ -491,7 +491,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		counter -= 4;
 		break;
 
-	case 0x50://EOR absolute, x
+	case 0x5D://EOR absolute, x
 		r->accumulator = op_eor(r, op_absolute_x(r, cm, &boundary));
 		counter -= boundary ? 4 : 5;
 		break;
@@ -507,7 +507,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 
 	case 0x51://EOR indirect y
-		r->accumulator = op_eor(r, op_indirect_y(r, cm));
+		r->accumulator = op_eor(r, op_indirect_y(r, cm, boundary));
 		counter -= boundary ? 5 : 6;
 		break;
 		
@@ -518,25 +518,25 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 
 	case 0x46://LSR Zero Page
 		addr = mem_zero_page(r, cm);
-		set_cpu_memory(cm, addr, op_lsr(op_zero_page(r, cm)));
+		set_cpu_memory(cm, addr, op_lsr(r, op_zero_page(r, cm)));
 		counter -= 5;
 		break;
 
 	case 0x56://LSR zero page, x
 		addr = mem_zero_page_x(r, cm);
-		set_cpu_memory(cm, addr, op_lsr(op_zero_page_x(r, cm)));
+		set_cpu_memory(cm, addr, op_lsr(r, op_zero_page_x(r, cm)));
 		counter -= 6;
 		break;
 
 	case 0x4E://LSR absolute
 		addr = mem_absolute(r, cm);
-		set_cpu_memory(cm, addr, op_lsr(op_absolute(r, cm)));
+		set_cpu_memory(cm, addr, op_lsr(r, op_absolute(r, cm)));
 		counter -= 6;
 		break;
 
 	case 0x5E://LSR absolute, x
 		addr =  mem_absolute_x(r, cm);
-		set_cpu_memory(cm, addr, op_lsr(op_absolute_x(r, cm)));
+		set_cpu_memory(cm, addr, op_lsr(r, op_absolute_x(r, cm, boundary)));
 		break;
 		
 	case 0x09://ORA immediate
@@ -575,7 +575,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 
 	case 0x11://ORA indirect, y
-		r->accumulator = op_ora(r, op_indirect_y(r, cm));
+		r->accumulator = op_ora(r, op_indirect_y(r, cm, boundary));
 		counter -= 5;
 		break;
 
@@ -604,7 +604,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 
 	case 0x3E://ROL absolute x 
 		addr = mem_absolute_x(r, cm);
-		set_cpu_memory(cm, addr, op_rol(r, op_absolute_x(r, cm)));
+		set_cpu_memory(cm, addr, op_rol(r, op_absolute_x(r, cm, boundary)));
 		counter -= 7;
 		break;
 
@@ -633,60 +633,234 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 
 	case 0x7E://ROR absolute, x
 		addr = mem_absolute_x(r, cm);
-		set_cpu_memory(cm, addr, op_ror(r, op_absolute_x(r, cm)));
+		set_cpu_memory(cm, addr, op_ror(r, op_absolute_x(r, cm, boundary)));
 		counter -= 7;
 		break;
 
 	case 0xE9://SBC immediate
-		
+		r->accumulator = op_sbc(r, op_immediate(r, cm));
+		counter -= 2;
 		break;
 
 	case 0xE5://SBC zero page
-		
+		r->accumulator = op_sbc(r, op_zero_page(r, cm));
+		counter -= 3;
 		break;
 
-	case 0xF%://SBC zero page, x
-		
+	case 0xF5://SBC zero page, x
+		r->accumulator = op_sbc(r, op_zero_page_x(r, cm));
+		counter -= 4;
 		break;
 
 	case 0xED://SBC absolute
-		
+		r->accumulator = op_sbc(r, op_absolute(r, cm));
+		counter -= 4;
 		break;
 
 	case 0xFD://SBC absolute, x
-		
+		r->accumulator = op_sbc(r, op_absolute_x(r, cm, &boundary));
+		counter -= boundary ? 4 : 5;
 		break;
 
 	case 0xF9://SBC absolute, y
-		
+		r->accumulator = op_sbc(r, op_absolute_y(r, cm, &boundary));
+		counter -= boundary ? 4 : 5;
 		break;
 
 	case 0xE1://SBC indirect, x
-		
+		r->accumulator = op_sbc(r, op_indirect_x(r, cm));
+		counter -= 6;
 		break;
 
 	case 0xF1://SBC indirect, y
-		
+		r->accumulator = op_sbc(r, op_indirect_y(r, cm, boundary));
+		counter -= 5;
 		break;
 
-	case 0x://
-		
+	case 0x69://ADC immediate
+		r->accumulator = op_adc(r, op_immediate(r, cm));
+		counter -= 2;
 		break;
 
-	case 0x://
-		
+	case 0x65://ADC zero page
+		r->accumulator = op_adc(r, op_zero_page(r, cm));
+		counter -= 3;
 		break;
 
-	case 0x://
-		
+	case 0x75://ADC zero page, x
+		r->accumulator = op_adc(r, op_zero_page_x(r, cm));
+		counter -= 4;
 		break;
 
-	case 0x://
-		
+	case 0x6D://ADC absolute
+		r->accumulator = op_adc(r, op_absolute(r, cm));
+		counter -= 4;
 		break;
 
+	case 0x70://ADC absolute, x
+		r->accumulator = op_adc(r, op_absolute_x(r, cm, &boundary));
+		counter -= boundary ? 4 : 5;
+		break;
 
+	case 0x79://ADC absolute, y
+		r->accumulator = op_adc(r, op_absolute_y(r, cm, &boundary));
+		counter -= boundary ? 4 : 5;
+		break;
+
+	case 0x61://ADC indirect, x
+		r->accumulator = op_adc(r, op_indirect_x(r, cm));
+		counter -= 6;
+		break;
+
+	case 0x71://ADC indirect, y
+		r->accumulator = op_adc(r, op_indirect_y(r, cm, &boundary));
+		counter -= boundary ? 5 : 6;
+		break;
 		
+	case 0xC6://DEC zero page
+		addr = mem_zero_page(r, cm);
+		set_cpu_memory(cm, addr, op_de(r, op_zero_page(r, cm)));
+		counter -= 5;
+		break;
+
+	case 0xD6://DEC zero page, x
+		addr = mem_zero_page_x(r, cm);
+		set_cpu_memory(cm, addr, op_de(r, op_zero_page_x(r, cm)));
+		counter -= 6;
+		break;
+
+	case 0xCE://DEC absolute
+		addr = mem_absolute(r, cm);
+		set_cpu_memory(cm, addr, op_de(r, op_absolute(r, cm)));
+		counter -= 6;
+		break;
+
+	case 0xDE://DEC absolute, x
+		addr = mem_absolute_x(r, cm);
+		set_cpu_memory(cm, addr, op_de(r, op_absolute(r, cm)));
+		counter -= 7;
+		break;
+
+	case 0xCA://DEX implied
+		r->x_index = op_de(r, r->x_index);
+		counter -= 2;
+		break;
+
+	case 0x88://DEY implied
+		r->y_index = op_de(r, r->y_index);
+		counter -= 2;
+		break;
+
+	case 0xE6://INC zero page
+		addr = mem_zero_page(r, cm);
+		set_cpu_memory(cm, addr, op_in(r, op_zero_page(r, cm)));
+		counter -= 5;
+		break;
+		
+	case 0xF6://INC zero page, x
+		addr = mem_zero_page_x(r, cm);
+		set_cpu_memory(cm, addr, op_in(r, op_zero_page_x(r, cm)));
+		counter -= 6;
+		break;
+		
+	case 0xEE://INC absolute
+		addr = mem_absolute(r, cm);
+		set_cpu_memory(cm, addr, op_in(r, op_absolute(r, cm)));
+		counter -= 6;
+		break;
+		
+	case 0xFE://INC absolute, x
+		addr = mem_absolute_x(r, cm);
+		set_cpu_memory(cm, addr, op_in(r, op_absolute_x(r, cm, boundary)));
+		counter -= 7;
+		break;
+
+	case 0xE8://INX implied
+		r->x_index = op_in(r, r->x_index);
+		counter -= 2;
+		break;
+		
+	case 0xC8://INY implied
+		r->y_index = op_in(r, r->y_index);
+		counter -= 2;
+		break;
+		
+	case 0x48://PHA implied
+		op_ph(r, cm, r->accumulator);
+		counter -= 3;
+		break;
+		
+	case 0x08://PHP implied
+		op_ph(r, cm, r->condition_codes);
+		counter -= 3;
+		break;
+		
+	case 0x68://PLA
+		r->accumulator = op_pl(r, cm);
+		break;
+
+	case 0x28://PLP
+		r->condition_codes = op_pl(r, cm);
+		break;
+
+	case 0x90://BCC
+	        counter -= op_b(r, cm, get_carry(r) == false);
+		break;
+
+	case 0xB0://BCS
+	        counter -= op_b(r, cm, get_carry(r) == true);
+		break;
+
+	case 0xF0://BEQ
+		counter -= op_b(r, cm, get_zero(r) == true);
+		break;
+
+	case 0x30://BMI
+		counter -= op_b(r, cm, get_negative(r) == true);
+		break;
+		
+	case 0xD0://BNE
+		counter -= op_b(r, cm, get_zero(r) == false);
+		break;
+		
+	case 0x10://BPL
+		counter -= op_b(r, cm, get_negative(r) == false);
+		break;
+		
+	case 0x50://BVC
+		counter -= op_b(r, cm, get_overflow(r) == false);
+		break;
+		
+	case 0x4C://JMP relative
+		r->program_counter = mem_absolute(r, cm);
+		counter -= 3;
+		break;
+		
+	case 0x6C://JMP indirect
+		r->program_counter = mem_indirect(r, cm);
+		counter -= 5;
+		break;
+		
+	case 0x20://JSR
+	        set_cpu_memory(cm, r->stack_pointer--, get_half_word(r->program_counter+2, true));
+		set_cpu_memory(cm, r->stack_pointer--, get_half_word(r->program_counter+2, false));
+		r->program_counter = op_absolute(r, cm);
+		counter -= 6;
+		break;
+		
+	case 0x4D://RTI
+		r->condition_codes = get_cpu_memory(cm, r->stack_pointer--);
+		r->program_counter = combine(get_cpu_memory(cm, r->stack_pointer),
+					     get_cpu_memory(cm, r->stack_pointer-1));
+		r->stack_pointer -= 2;
+		counter -= 6;
+		break;
+			
+	case 0x60://RTS
+		r->program_counter = combine(get_cpu_memory(cm, r->stack_pointer++),
+					     get_cpu_memory(cm, r->stack_pointer++));
+		counter -= 6;
+		break;
 		
 	default://illegal opcode
 		log_warn("Illegal opcode at %X", r->instruction);
