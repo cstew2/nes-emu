@@ -21,8 +21,6 @@ typedef struct {
 
 	uint64_t ticks;
 	uint8_t instruction;
-	uint16_t memory_address_buffer;
-	uint16_t memory_buffer;
 }cpu_registers;
 
 
@@ -35,6 +33,13 @@ void set_interrupt(cpu_registers *r, bool flag);
 void set_break(cpu_registers *r, bool flag);
 void set_overflow(cpu_registers *r, bool flag);
 void set_negative(cpu_registers *r, bool flag);
+
+bool get_carry(cpu_registers *r);
+bool get_zero(cpu_registers *r);
+bool get_interrupt(cpu_registers *r);
+bool get_break(cpu_registers *r);
+bool get_overflow(cpu_registers *r);
+bool get_negative(cpu_registers *r);
 
 void cpu_reset(cpu_registers *r);
 int fetch(cpu_registers *r, cpu_memory_map *cm);

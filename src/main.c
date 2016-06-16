@@ -4,7 +4,6 @@
 #include <stdbool.h>
 
 #include "main.h"
-#include "cart.h"
 #include "error.h"
 #include "debug.h"
 
@@ -34,28 +33,11 @@ int main(int argc, char **argv)
 			print_help();
 		}
 	}
-		
-	rom_file *data;
-	uint8_t *raw;
-	if(o_flag) {
-		raw = open_rom_file(filename);
-		data = rom_file_init(raw);
-	}
-	else{
-		fprintf(stderr, "Error:no rom file given\n");
-		return -1;
-	}
 	
 	if(d_flag) {
 		debug_on = true;
-		rom_file_info(data);
 	}
-
 	
-	
-	free(filename);
-	free(raw);
-	free(data);
 	return 0;
 }
 

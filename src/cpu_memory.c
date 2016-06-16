@@ -6,8 +6,8 @@
 
 cpu_memory_map *cpu_memory_init(void)
 {
-	cpu_memory_map *m = NULL;
-	m = malloc(sizeof(cpu_memory_map));
+	cpu_memory_map *m = malloc(sizeof(cpu_memory_map));
+	check_memory(m);
 	
 	check_memory(m->prg_rom_lower = calloc(16384, sizeof(uint8_t)));
 	check_memory(m->prg_rom_upper = calloc(16384, sizeof(uint8_t)));
@@ -78,7 +78,7 @@ int set_cpu_memory(cpu_memory_map *m, uint16_t addr, uint8_t write)
 			m->cpu_ram[i] = write;
 		}
 	}
-	else if(addr > 16416  && addr < 24576) { /* cartrige expansion rom */
+	else if(addr > 16416 && addr < 24576) { /* cartrige expansion rom */
 		m->expansion_rom[addr] = write;
 	}
 	else if(addr > 24576 && addr < 32768) { /* save ram */

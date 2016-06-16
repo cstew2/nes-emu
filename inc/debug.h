@@ -5,7 +5,6 @@
 #include <stdbool.h>
 
 bool debug_on;
-FILE *fp;
 
 /* function prototypes */
 void debug_init(void);

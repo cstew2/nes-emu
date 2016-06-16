@@ -3,6 +3,8 @@
 
 #include "debug.h"
 
+static FILE *fp;
+
 void debug_init(void)
 {
 	char *filepath = "./nes.log";

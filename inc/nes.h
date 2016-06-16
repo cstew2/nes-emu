@@ -21,8 +21,9 @@ typedef struct {
 }nes_emu;
 
 /* funciton prototypes */
-int start_nes_emu(rom_file *rf);
+nes_emu *init_nes_emu(rom_file *rf);
 int main_nes_loop(nes_emu *e);
-
+rom_file *load_nes_rom(char *filename);
+int start_nes_emu();
 
 #endif

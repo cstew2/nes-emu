@@ -4,24 +4,25 @@
 
 #include "cart.h"
 #include "error.h"
+#include "debug.h"
 #include "bit_field.h"
 
 uint8_t *open_rom_file(const char *filename)
 {
 	check_memory(filename);
-	FILE *fp = NULL;
+	FILE *f = NULL;
 	size_t size;
-	fp = fopen(filename, "rb");
+	f = fopen(filename, "rb");
 	check_errno();
 	
 	
-	fseek(fp, 0, SEEK_END);
-	size = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
+	fseek(f, 0, SEEK_END);
+	size = ftell(f);
+	fseek(f, 0, SEEK_SET);
 	
 	uint8_t *file_buffer = calloc(size, sizeof(uint8_t));
-	fread(file_buffer, 1, size, fp);
-	fclose(fp);
+	fread(file_buffer, 1, size, f);
+	fclose(f);
 
 	return file_buffer;
 }
@@ -79,7 +80,7 @@ void rom_file_del(rom_file *r)
 
 int rom_file_info(const rom_file *data)
 {
-	printf("Header: %s\n"
+	log_info("Header: %s\n"
 	       "16kB ROM pages: %i\n"
 	       "8kB VROM pages: %i\n"
 	       "Mirroring: %i\n"
