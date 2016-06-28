@@ -43,8 +43,10 @@ rom_file *load_nes_rom(char *filename)
 int start_nes_emu(char *filename)
 {
 	rom_file *rf = load_nes_rom(filename);
+	log_info("Succesfully loaded %s rom", filename);
 	nes_emu *e = init_nes_emu(rf);
-
+	log_info("succesfully initiated the NES cpu core");
+		
 	main_nes_loop(e);
 
 	return 0;

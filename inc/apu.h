@@ -34,4 +34,6 @@ typedef struct { /* $4000-$4017 */
 	uint8_t sound_channel; /* bit 0-4 for channels 1-5 */
 }apu_registers;
 
+apu_register *apu_init(void);
+
 #endif

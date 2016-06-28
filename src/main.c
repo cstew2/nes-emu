@@ -37,6 +37,9 @@ int main(int argc, char **argv)
 	if(d_flag) {
 		debug_on = true;
 	}
+
+	//main start point
+	start_nes_emu(filename);
 	
 	return 0;
 }

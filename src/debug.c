@@ -7,7 +7,7 @@ static FILE *fp;
 
 void debug_init(void)
 {
-	char *filepath = "./nes.log";
+	const char *filepath = "./nes.log";
 	
 	fp = fopen(filepath, "w");
 }

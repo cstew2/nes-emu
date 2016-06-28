@@ -34,7 +34,8 @@ uint16_t mem_relative(cpu_registers *r, cpu_memory_map *cm, bool boundary)
 uint16_t mem_indirect(cpu_registers *r, cpu_memory_map *cm)
 {
 	uint16_t addr = combine(get_cpu_memory(cm, r->program_counter),
-				get_cpu_memory(cm, r->program_counter+1));
+				get_cpu_memory(cm, r->program_counter+1) % 0xFF);
+	//indirect jmp bug
 	r->program_counter =+ 2;
 	return combine(addr, (addr + 1 & 0xFF00));
 }
@@ -300,4 +301,3 @@ uint8_t op_b(cpu_registers *r, cpu_memory_map *cm, bool condition)
 	r->program_counter = addr;
 	return boundary ? 3 : 4;
 }
-
