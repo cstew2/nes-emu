@@ -1,8 +1,0 @@
-ops
-ops2
-test_header
-roms/*
-inc/Makefile
-src/Makefile
-debug/*
-release/*
