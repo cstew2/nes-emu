@@ -1,76 +1,46 @@
-TARGET		= nes
+TARGET          = cnes
 
-CC		= gcc
+MODULES         = nes mappers emu sim util
 
-CFLAGS		= -I./inc --std=c99
+CC              = gcc
 
-LD		= gcc
-LDFLAGS		= 
+CFLAGS          := -std=c99 -I./
 
-LIBS		= 
+DCFLAGS         := -g -ggdb3 -O0 -Wall -pedantic -Wextra -Wundef -Wshadow \
+                  -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wwrite-strings \
+                  -Waggregate-return -Wswitch-default -Wswitch-enum \
+                  -Wunreachable-code -Winit-self
 
-SRCD		=./src
-INCD		=./inc
-DEB		=./debug
-REL		=./release
+RCFLAGS         := -O2 -fwhole-program
 
-SRC		:= $(wildcard $(SRCD)/*.c)
-INC		:= $(wildcard $(INCD)/*.h)
+LDFLAGS         :=
 
+LIBS            :=
 
-#debug
-DCFLAGS		= -g -ggdb3 -O0 -Wall -pedantic -Wextra -Wundef -Wshadow \
-		  -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wwrite-strings \
-		  -Waggregate-return -Wswitch-default -Wswitch-enum \
-		  -Wunreachable-code -Winit-self \
+include         $(patsubst %, %/module.mk, $(MODULES))
 
-DLDFLAGS	= 
-
-DOBJD		:=$(DEB)/obj
-DOBJ		:=$(SRC:$(SRCD)/%.c=$(DOBJD)/%.o)
-
-DBIND		:=$(DEB)/bin
-DBIN		:=$(DBIND)/$(TARGET)
+OBJ             := $(patsubst %.c,%.o, $(filter %.c,$(SRC)))
 
 
-#release
-RCFLAGS		= -O3 -fwhole-program
-RLDFLAGS	= 
+.PHONY: debug
+debug: CFLAGS += $(DFLAGS)
+debug:  build
 
-ROBJD		:=$(REL)/obj
-ROBJ		:=$(SRC:$(SRCD)/%.c=$(ROBJD)/%.o)
-
-RBIND		:=$(REL)/bin
-RBIN		:=$(RBIND)/$(TARGET)
-
-RM		= rm -rf
-MKDIR		= mkdir -p
-
-all: release debug
-
-release: $(RBIN)
-$(RBIN): $(ROBJ)
-	$(MKDIR) $(RBIND)
-	$(LD) $(LDFLAGS) $(RLDFLAGS) -o $@ $^
-	@echo "[LD] Linked "$(ROJB)", executable "$@" created"
-
-$(ROBJ): $(ROBJD)/%.o: $(SRCD)/%.c $(INC)
-	$(MKDIR) $(REL) $(ROBJD)
-	$(CC) $(CFLAGS) $(RCFLAGS) -o $@ -c $<
-	@echo "[CC] Compiled "$<" succesfully"
+.PHONY: release
+release: CFLAGS += $(RCFLAGS)
+release: build
 
 
-debug: $(DBIN)
-$(DBIN): $(DOBJ)
-	$(MKDIR) $(DBIND)
-	$(LD) $(LDFLAGS) $(DLDFLAGS) -o $@ $^
-	@echo "[LD] linked "$(DOBJ)", executable "$@" created"
+.PHONY: build
+build: $(OBJ)
+	@$(CC) $(LDFLAGS) $(OBJ) -o $(TARGET) $(LIBS)
+	@echo [LD] Linked $^ into $@
 
-$(DOBJ): $(DOBJD)/%.o : $(SRCD)/%.c $(INC)
-	$(MKDIR) $(DEB) $(DOBJD)
-	$(CC) $(CFLAGS) $(DCFLAGS) -o $@ -c $<
-	@echo "[CC] Compiled "$<" succesfully"
+%.o:%.c
+	@$(CC) $(CFLAGS) -c $^ -o $@
+	@echo [CC] Compiled $^ into $@
 
+.PHONY: clean
 clean:
-	@$(RM) $(DEB) $(REL) $(SRCD)/*~ $(INCD)/*~ ./*~
-	@echo "build cleaned"
+	@rm -f $(OBJ) $(TARGET)
+	@echo Cleaned $(OBJ) and $(TARGET)
