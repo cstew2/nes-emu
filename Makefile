@@ -15,7 +15,7 @@ RCFLAGS         := -O2 -fwhole-program
 
 LDFLAGS         :=
 
-LIBS            :=
+LIBS            := 
 
 include         $(patsubst %, %/module.mk, $(MODULES))
 
@@ -23,7 +23,7 @@ OBJ             := $(patsubst %.c,%.o, $(filter %.c,$(SRC)))
 
 
 .PHONY: debug
-debug: CFLAGS += $(DFLAGS)
+debug: CFLAGS += $(DCFLAGS)
 debug:  build
 
 .PHONY: release
@@ -42,5 +42,5 @@ build: $(OBJ)
 
 .PHONY: clean
 clean:
-	@rm -f $(OBJ) $(TARGET)
+	@rm -f $(OBJ) $(TARGET) cnes.log
 	@echo Cleaned $(OBJ) and $(TARGET)

@@ -15,6 +15,9 @@ void apu_term(apu_registers *ar)
 	free(ar);
 }
 
+
+
+
 /* pulse 1 */
 //$4000
 uint8_t get_pulse1_duty(apu_registers *ar)

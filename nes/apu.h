@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+
 typedef struct { /* $4000-$4017 */
 	/* pulse 1 channel */
 	uint8_t pulse1_settings;
@@ -39,6 +40,8 @@ typedef struct { /* $4000-$4017 */
 
 apu_registers *apu_init(void);
 void apu_term(apu_registers *ar);
+
+
 
 /* pulse 1 */
 //$4000

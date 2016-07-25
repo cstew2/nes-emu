@@ -16,7 +16,7 @@ nes_emu *init_nes_emu(rom_file *rf)
 
 int main_nes_loop(nes_emu *e)
 {
- 	bool quit = false;
+ 	bool quit = true;
 	while(quit) {
 		fetch(e->r, e->cm);
 		execute(e->r, e->cm);
@@ -43,11 +43,13 @@ rom_file *load_nes_rom(char *filename)
 int start_nes_emu(char *filename)
 {
 	rom_file *rf = load_nes_rom(filename);
-	log_info("Succesfully loaded %s rom", filename);
+	log_info("Succesfully loaded %s rom\n", filename);
+	
 	nes_emu *e = init_nes_emu(rf);
-	log_info("succesfully initiated the NES cpu core");
-		
+	log_info("Succesfully initiated the NES cpu core\n");
+	
 	main_nes_loop(e);
-
+	log_info("Main loop ended");
+	
 	return 0;
 }
