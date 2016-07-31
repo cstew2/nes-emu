@@ -12,25 +12,19 @@
 int main(int argc, char **argv)
 {
 	bool d_flag = false;
-	bool o_flag = false;
 
 	char *filename = calloc(sizeof(char), MAX_BUFFER);
-
-	if(argc < 2) {
-	        print_help();
-		exit(-1);
-	}
+	filename = NULL;
 	
 	for(int i=1; i < argc; i++) {
 		if(!strncmp(argv[i], "-d", 2)) {
 			d_flag = true;
 		}
 		else if(!strncmp(argv[i], "-o", 2)) {
-		       o_flag = true;
 		       i++;
 		       strncpy(filename, argv[i], strlen(argv[i]));
 		}
-		else if(!strncmp(argv[i], "--help", 6)) {
+		else if(!strncmp(argv[i], "-", 6)) {
 			print_help();
 		}
 	}
@@ -41,9 +35,9 @@ int main(int argc, char **argv)
 	}
 
 	//main start point
-	if(o_flag) {
-		start_nes_emu(filename);
-	}
+	
+	start_nes_emu(filename);
+	
 	return 0;
 }
 

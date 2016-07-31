@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#include "emu/debug.h"
+#include "debug.h"
 
 static FILE *fp;
 

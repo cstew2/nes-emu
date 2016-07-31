@@ -15,7 +15,7 @@ RCFLAGS         := -O2 -fwhole-program
 
 LDFLAGS         :=
 
-LIBS            := 
+LIBS            := -lX11 -lGL -lGLU -lglut
 
 include         $(patsubst %, %/module.mk, $(MODULES))
 
@@ -42,5 +42,5 @@ build: $(OBJ)
 
 .PHONY: clean
 clean:
-	@rm -f $(OBJ) $(TARGET) cnes.log
+	@rm -f $(OBJ) $(TARGET) cnes.log core
 	@echo Cleaned $(OBJ) and $(TARGET)

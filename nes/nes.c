@@ -3,6 +3,7 @@
 #include "nes/nes.h"
 #include "emu/debug.h"
 #include "emu/error.h"
+#include "emu/gui.h"
 
 nes_emu *init_nes_emu(rom_file *rf)
 {
@@ -42,14 +43,20 @@ rom_file *load_nes_rom(char *filename)
 
 int start_nes_emu(char *filename)
 {
-	rom_file *rf = load_nes_rom(filename);
-	log_info("Succesfully loaded %s rom\n", filename);
-	
-	nes_emu *e = init_nes_emu(rf);
-	log_info("Succesfully initiated the NES cpu core\n");
-	
-	main_nes_loop(e);
-	log_info("Main loop ended");
+	main_gui();
+	log_info("succesfully started gui");
+
+	if(filename != NULL) {
+		rom_file *rf = load_nes_rom(filename);
+		log_info("Succesfully loaded %s rom\n", filename);
+		
+		nes_emu *e = init_nes_emu(rf);
+		log_info("Succesfully initiated the NES cpu core\n");
+
+		log_info("Main loop initialised");
+		main_nes_loop(e);
+		log_info("Main loop ended");
+	}
 	
 	return 0;
 }

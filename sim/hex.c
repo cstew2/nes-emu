@@ -2,3 +2,7 @@
 
 #include "sim/hex.h"
 
+int write_to_hex(char *string)
+{
+	
+}
