@@ -3,7 +3,8 @@
 #include "nes/nes.h"
 #include "emu/debug.h"
 #include "emu/error.h"
-#include "emu/gui.h"
+
+#include "emu/gui.hxx"
 
 nes_emu *init_nes_emu(rom_file *rf)
 {

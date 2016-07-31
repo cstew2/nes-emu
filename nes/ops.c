@@ -26,7 +26,7 @@ uint16_t mem_absolute_x(cpu_registers *r, cpu_memory_map *cm)
 uint16_t mem_relative(cpu_registers *r, cpu_memory_map *cm, bool boundary)
 {
 	uint16_t addr = get_cpu_memory(cm, r->program_counter);
-	boundary = !((addr) & 0xFF00) == (addr & 0xFF00);
+	boundary = (addr & 0xFF00) != (addr & 0xFF00);
 	
 	return addr;
 }

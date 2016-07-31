@@ -862,8 +862,9 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 			
 	case 0x60://RTS
-		r->program_counter = combine(get_cpu_memory(cm, r->stack_pointer++),
-					     get_cpu_memory(cm, r->stack_pointer++));
+		r->program_counter = combine(get_cpu_memory(cm, r->stack_pointer),
+					     get_cpu_memory(cm, r->stack_pointer-1));
+		r->stack_pointer -= 2;
 		counter -= 6;
 		break;
 		

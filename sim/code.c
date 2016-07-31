@@ -4,5 +4,6 @@
 
 int write_to_code(char *string)
 {
-	
+
+	return 0;
 }

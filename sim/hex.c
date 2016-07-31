@@ -4,5 +4,6 @@
 
 int write_to_hex(char *string)
 {
-	
+
+	return 0;
 }
