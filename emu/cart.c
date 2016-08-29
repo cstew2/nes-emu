@@ -67,8 +67,6 @@ rom_file *rom_file_init(const uint8_t *raw_file)
 
 	pos = 16; /* bytes 14-15 are zero */
 	
-	/* getting trainer data here */
-		
 	return r;
 }
 

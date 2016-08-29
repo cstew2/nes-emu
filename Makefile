@@ -10,7 +10,7 @@ CXXFLAGS	:= -std=c++11 -I./ `pkg-config --cflags QtCore QtGui`
 
 DCFLAGS         := -g -ggdb3 -O0 -Wall -pedantic -Wextra -Wundef -Wshadow \
                   -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wwrite-strings \
-                  -Waggregate-return -Wswitch-default -Wswitch-enum \
+                  -Wswitch-default -Wswitch-enum \
                   -Wunreachable-code -Winit-self
 
 RCFLAGS         := -O2 -fwhole-program

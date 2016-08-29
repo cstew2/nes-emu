@@ -5,7 +5,6 @@
 #include <stdbool.h>
 
 static const uint8_t INES_HEADER[] = {'N', 'E', 'S', 0x1A};
-static const int TRAINER_SIZE = 512;
 static const int PRG_ROM_SIZE = 65536;
 static const int CHR_ROM_SIZE = 8192;
 
