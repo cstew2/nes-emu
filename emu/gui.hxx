@@ -6,8 +6,7 @@
 extern "C" {
 #endif
 
-int main_gui(void);
-
+	int main_gui(void);
 
 	
 #ifdef __cplusplus

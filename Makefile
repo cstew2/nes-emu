@@ -1,4 +1,4 @@
-TARGET          = cnes
+ TARGET          = cnes
 
 MODULES         = nes mappers emu sim util
 

@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 		       i++;
 		       strncpy(filename, argv[i], strlen(argv[i]));
 		}
-		else if(!strncmp(argv[i], "-", 6)) {
+		else if(!strncmp(argv[i], "--help", 6)) {
 			print_help();
 		}
 	}
