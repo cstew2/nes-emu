@@ -2,8 +2,9 @@
 
 #include "sim/hex.h"
 
-int write_to_hex(char *string)
+char *rom_to_hex(uint8_t *rom)
 {
-
-	return 0;
+	char *string = malloc(sizeof(rom));
+	memcpy(string, rom, sizeof(rom));
+	return string;
 }

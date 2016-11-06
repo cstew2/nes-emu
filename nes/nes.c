@@ -44,9 +44,6 @@ rom_file *load_nes_rom(char *filename)
 
 int start_nes_emu(char *filename)
 {
-	main_gui();
-	log_info("succesfully started gui");
-
 	if(filename != NULL) {
 		rom_file *rf = load_nes_rom(filename);
 		log_info("Succesfully loaded %s rom\n", filename);

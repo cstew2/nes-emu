@@ -36,9 +36,17 @@ int main(int argc, char **argv)
 
 	//main start point
 	
-	start_nes_emu(filename);
+	start_nes(filename);
 	
 	return 0;
+}
+
+void start_nes(char *filename)
+{
+	main_gui();
+	log_info("succesfully started gui");
+	start_nes_emu(filename);
+
 }
 
 void print_help(void)

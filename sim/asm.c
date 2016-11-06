@@ -3,9 +3,9 @@
 
 #include "sim/asm.h"
 
-char *rom_to_string(uint8_t *rom)
+char *rom_to_asm(uint8_t *rom)
 {
-	char *string = NULL;
+	char *string = malloc(sizeof(rom));
 	size_t i = 0;
 	while(i < sizeof(rom)) {
 		strcat(string, table[rom[i]].instruction);

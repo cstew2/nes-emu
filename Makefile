@@ -1,4 +1,4 @@
- TARGET          = cnes
+TARGET          = cnes
 
 MODULES         = nes mappers emu sim util
 
@@ -16,7 +16,7 @@ DCFLAGS         := -g -ggdb3 -O0 -Wall -pedantic -Wextra -Wundef -Wshadow \
 RCFLAGS         := -O2 -fwhole-program
 
 
-LIBS            := -lX11 -lGL -lGLU -lglut `pkg-config --libs QtCore QtGui`
+LIBS            := -lGL -lGLU -lglut `pkg-config --libs QtCore QtGui`
 
 include         $(patsubst %, %/module.mk, $(MODULES))
 

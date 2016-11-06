@@ -268,6 +268,6 @@ static const asm_entry table[256] = {
 	{0xFF,"ILG",3}
 };
 
-char *rom_to_string(uint8_t *rom);
+char *rom_to_asm(uint8_t *rom);
 
 #endif
