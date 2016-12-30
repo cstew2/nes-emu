@@ -23,10 +23,10 @@ uint16_t mem_absolute_x(cpu_registers *r, cpu_memory_map *cm)
 		       get_cpu_memory(cm, r->program_counter+1)) + r->x_index;
 }
 
-uint16_t mem_relative(cpu_registers *r, cpu_memory_map *cm, bool boundary)
+uint16_t mem_relative(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
 	uint16_t addr = get_cpu_memory(cm, r->program_counter);
-	boundary = (addr & 0xFF00) != (addr & 0xFF00);
+	*boundary = (addr & 0xFF00) != (addr & 0xFF00);
 	
 	return addr;
 }
@@ -64,21 +64,21 @@ uint8_t op_absolute(cpu_registers *r, cpu_memory_map *cm)
 	return addr;
 }
 
-uint8_t op_absolute_x(cpu_registers *r, cpu_memory_map *cm, bool boundary)
+uint8_t op_absolute_x(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
 	uint16_t addr =  combine(get_cpu_memory(cm, r->program_counter),
 				    get_cpu_memory(cm, r->program_counter+1));
 	r->program_counter += 2;
-	boundary = !((addr + r->x_index) & 0xFF00) == (addr & 0xFF00);
+	*boundary = !(((addr + r->x_index) & 0xFF00) == (addr & 0xFF00));
 	return get_cpu_memory(cm, addr + r->x_index);
 }
 
-uint8_t op_absolute_y(cpu_registers *r, cpu_memory_map *cm, bool boundary)
+uint8_t op_absolute_y(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
         uint16_t addr = combine(get_cpu_memory(cm, r->program_counter),
 				   get_cpu_memory(cm, r->program_counter+1));
 	r->program_counter += 2;
-	boundary = !((addr + r->y_index) & 0xFF00) == (addr & 0xFF00);
+	*boundary = !(((addr + r->y_index) & 0xFF00) == (addr & 0xFF00));
 	return get_cpu_memory(cm, addr + r->y_index);
 }
 
@@ -105,10 +105,10 @@ uint8_t op_indirect_x(cpu_registers *r, cpu_memory_map *cm)
 					  get_cpu_memory(cm, addr+1)));
 }
 
-uint8_t op_indirect_y(cpu_registers *r, cpu_memory_map *cm, bool boundary)
+uint8_t op_indirect_y(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
 	uint16_t addr = get_cpu_memory(cm, r->program_counter++);
-	boundary = !((addr + r->y_index) & 0xFF00) == (addr & 0xFF00);
+	*boundary = !(((addr + r->y_index) & 0xFF00) == (addr & 0xFF00));
 	return get_cpu_memory(cm, combine(addr, addr+1)) + r->y_index;
 }
 

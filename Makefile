@@ -37,7 +37,7 @@ release: build
 .PHONY: build
 build: $(OBJ) $(OBJXX)
 	@$(CXX) $(LDFLAGS) $(OBJ) $(OBJXX) -o $(TARGET) $(LIBS)
-	@echo [LD] Linked $^ into $@
+	@echo [LD] Linked $^ into $(TARGET)
 
 %.o:%.c
 	@$(CC) $(CFLAGS) -c $^ -o $@

@@ -439,7 +439,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 
 	case 0x31://AND indirect, y
-		op_and(r, op_indirect_y(r, cm, boundary));
+		op_and(r, op_indirect_y(r, cm, &boundary));
 		counter -= 5;
 		break;
 
@@ -512,7 +512,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 
 	case 0x51://EOR indirect y
-		r->accumulator = op_eor(r, op_indirect_y(r, cm, boundary));
+		r->accumulator = op_eor(r, op_indirect_y(r, cm, &boundary));
 		counter -= boundary ? 5 : 6;
 		break;
 		
@@ -541,7 +541,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 
 	case 0x5E://LSR absolute, x
 		addr =  mem_absolute_x(r, cm);
-		set_cpu_memory(cm, addr, op_lsr(r, op_absolute_x(r, cm, boundary)));
+		set_cpu_memory(cm, addr, op_lsr(r, op_absolute_x(r, cm, &boundary)));
 		break;
 		
 	case 0x09://ORA immediate
@@ -580,7 +580,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 
 	case 0x11://ORA indirect, y
-		r->accumulator = op_ora(r, op_indirect_y(r, cm, boundary));
+		r->accumulator = op_ora(r, op_indirect_y(r, cm, &boundary));
 		counter -= 5;
 		break;
 
@@ -609,7 +609,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 
 	case 0x3E://ROL absolute x 
 		addr = mem_absolute_x(r, cm);
-		set_cpu_memory(cm, addr, op_rol(r, op_absolute_x(r, cm, boundary)));
+		set_cpu_memory(cm, addr, op_rol(r, op_absolute_x(r, cm, &boundary)));
 		counter -= 7;
 		break;
 
@@ -638,7 +638,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 
 	case 0x7E://ROR absolute, x
 		addr = mem_absolute_x(r, cm);
-		set_cpu_memory(cm, addr, op_ror(r, op_absolute_x(r, cm, boundary)));
+		set_cpu_memory(cm, addr, op_ror(r, op_absolute_x(r, cm, &boundary)));
 		counter -= 7;
 		break;
 
@@ -678,7 +678,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 
 	case 0xF1://SBC indirect, y
-		r->accumulator = op_sbc(r, op_indirect_y(r, cm, boundary));
+		r->accumulator = op_sbc(r, op_indirect_y(r, cm, &boundary));
 		counter -= 5;
 		break;
 
@@ -776,7 +776,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		
 	case 0xFE://INC absolute, x
 		addr = mem_absolute_x(r, cm);
-		set_cpu_memory(cm, addr, op_in(r, op_absolute_x(r, cm, boundary)));
+		set_cpu_memory(cm, addr, op_in(r, op_absolute_x(r, cm, &boundary)));
 		counter -= 7;
 		break;
 
