@@ -9,6 +9,8 @@
 
 #include "nes/nes.h"
 
+#include "emu/gui.hxx"
+
 int main(int argc, char **argv)
 {
 	bool d_flag = false;

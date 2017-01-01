@@ -10,6 +10,7 @@
 #include "sim/code.h"
 #include "sim/hex.h"
 
+
 int main_gui(void)
 {
 	int argc = 1;
@@ -30,7 +31,6 @@ int main_gui(void)
 						   QString::fromUtf8("Choose a file "),
 						   QString::fromUtf8("~/"),
 						   QString::fromUtf8("nes rom files (*.nes)"));
-	
 	file->addAction(QString::fromUtf8("Open"), file_picker, SLOT(show()));
 	
 	
@@ -64,10 +64,9 @@ int main_gui(void)
 	prog->addAction(QString("RAM"), &ram_window, SLOT(show()));
 	
 	menu_bar->addMenu(prog);
-
+	
 	//start GUI
 	window->show();
 	app.exec();
 	return 0;
 }
-
