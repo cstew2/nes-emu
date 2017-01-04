@@ -14,6 +14,7 @@
 int main(int argc, char **argv)
 {
 	bool d_flag = false;
+	bool g_flag = false;
 
 	char *filename = calloc(sizeof(char), MAX_BUFFER);
 	filename = NULL;
@@ -21,6 +22,9 @@ int main(int argc, char **argv)
 	for(int i=1; i < argc; i++) {
 		if(!strncmp(argv[i], "-d", 2)) {
 			d_flag = true;
+		}
+		if(!strncmp(argv[i], "-g", 2)) {
+			g_flag = true;
 		}
 		else if(!strncmp(argv[i], "-o", 2)) {
 		       i++;
@@ -37,16 +41,29 @@ int main(int argc, char **argv)
 	}
 
 	//main start point
-	
-	start_nes(filename);
-	
+	if(g_flag) {
+		//start gui
+		start_gui();
+	}
+	else if(filename != NULL){
+		//start term
+		start_nes(filename);
+	}
+	else {
+		debug_message("You need to supply a file path to a iNES rom in order to run in terminal mode.\n"
+			      "Or run in gui mode with \"-g\" to select one from a file browser.\n");
+		printf("Run with -g for gui or supply a path to a rom file\n");
+	}
+	if(d_flag)
+	{
+	    	debug_term();
+	}
 	return 0;
 }
 
 void start_nes(char *filename)
 {
-	main_gui();
-	log_info("succesfully started gui");
+	log_info("Starting nes emulator...");
 	start_nes_emu(filename);
 
 }

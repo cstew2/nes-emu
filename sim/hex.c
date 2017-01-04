@@ -5,7 +5,6 @@
 
 char *rom_to_hex(uint8_t *rom)
 {
-	char *string = malloc(sizeof(rom));
-	memcpy(string, rom, sizeof(rom));
+	char *string = NULL;
 	return string;
 }

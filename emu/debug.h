@@ -8,6 +8,7 @@ bool debug_on;
 
 /* function prototypes */
 void debug_init(void);
+void debug_term(void);
 
 void debug_message(const char *message, ...);
 void log_info(const char *message, ...);

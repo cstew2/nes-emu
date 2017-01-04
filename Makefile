@@ -16,12 +16,16 @@ DCFLAGS         := -g -ggdb3 -O0 -Wall -pedantic -Wextra -Wundef -Wshadow \
 RCFLAGS         := -O2 -fwhole-program
 
 
-LIBS            := -lGL -lGLU -lglut `pkg-config --libs QtCore QtGui`
+LIBS            := `pkg-config --libs QtCore QtGui`
+
+MOC		:= moc
 
 include         $(patsubst %, %/module.mk, $(MODULES))
 
-OBJ             := $(patsubst %.c,%.o, $(filter %.c,$(SRC)))
-OBJXX		:= $(patsubst %.cxx,%.o, $(filter %.cxx,$(SRCXX)))
+OBJ             := $(patsubst %.c, %.o, $(filter %.c,$(SRC)))
+OBJXX		:= $(patsubst %.cxx, %.o, $(filter %.cxx,$(SRCXX)))
+MOCXX		:= $(patsubst %.hxx, %.moc.cxx, $(filter %.hxx, $(INCXX)))
+OBJMOCXX	:= $(patsubst %.moc.cxx, %.moc.o, $(filter %.moc.cxx, %.moc.o, $(MOCXX)))
 
 .PHONY: debug
 debug: CFLAGS += $(DCFLAGS)
@@ -35,9 +39,9 @@ release: build
 
 
 .PHONY: build
-build: $(OBJ) $(OBJXX)
-	@$(CXX) $(LDFLAGS) $(OBJ) $(OBJXX) -o $(TARGET) $(LIBS)
-	@echo [LD] Linked $^ into $(TARGET)
+build: $(OBJ) $(OBJMOCXX) $(OBJXX) 
+	@$(CXX) $(LDFLAGS) $(OBJ) $(OBJMOCXX) $(OBJXX) -o $(TARGET) $(LIBS)
+	@echo [LD] Linked $^ into binary $(TARGET)
 
 %.o:%.c
 	@$(CC) $(CFLAGS) -c $^ -o $@
@@ -46,6 +50,14 @@ build: $(OBJ) $(OBJXX)
 %.o:%.cxx
 	@$(CXX) $(CXXFLAGS) -c $^ -o $@
 	@echo [CXX] Compiled $^ into $@
+
+%.moc.cxx: %.hxx
+	@$(MOC) $< -o $@
+	@echo [MOC] Compiled $^ into $@
+
+%.moc.o: %.moc.cxx
+	@$(CXX) $(CXXFLAGS) -c $^ -o $@
+	@echo [MOC[ Compiled $^ into $@
 
 .PHONY: clean
 clean:
