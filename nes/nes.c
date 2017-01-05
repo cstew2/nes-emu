@@ -51,9 +51,9 @@ int start_nes_emu(char *filename)
 		nes_emu *e = init_nes_emu(rf);
 		log_info("Succesfully initiated the NES cpu core\n");
 
-		log_info("Main loop initialised");
+		log_info("Main loop initialised\n");
 		main_nes_loop(e);
-		log_info("Main loop ended");
+		log_info("Main loop ended\n");
 	}
 	
 	return 0;

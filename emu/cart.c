@@ -9,11 +9,12 @@
 
 uint8_t *open_rom_file(const char *filename)
 {
+	printf("%s\n", filename);
 	check_memory(filename);
 	FILE *f = NULL;
-	size_t size;
+	size_t size = 0;
 	f = fopen(filename, "rb");
-	check_errno();
+	//check_errno();
 	
 	
 	fseek(f, 0, SEEK_END);

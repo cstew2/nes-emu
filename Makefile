@@ -27,6 +27,7 @@ OBJXX		:= $(patsubst %.cxx, %.o, $(filter %.cxx,$(SRCXX)))
 MOCXX		:= $(patsubst %.hxx, %.moc.cxx, $(filter %.hxx, $(INCXX)))
 OBJMOCXX	:= $(patsubst %.moc.cxx, %.moc.o, $(filter %.moc.cxx, %.moc.o, $(MOCXX)))
 
+
 .PHONY: debug
 debug: CFLAGS += $(DCFLAGS)
 debug: CXXFLAGS += $(DCFLAGS)
@@ -61,5 +62,5 @@ build: $(OBJ) $(OBJMOCXX) $(OBJXX)
 
 .PHONY: clean
 clean:
-	@rm -f $(OBJ) $(OBJXX) $(TARGET) cnes.log core
-	@echo Cleaned $(OBJ) and $(TARGET)
+	@rm -f $(OBJ) $(OBJXX) $(MOCXX) $(MOCOBJXX) $(TARGET) cnes.log core
+	@echo Cleaned $(OBJ) $(OBJXX) $(MOCXX) $(OBJMOCXX) and $(TARGET)

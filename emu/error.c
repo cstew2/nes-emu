@@ -17,7 +17,7 @@ void check_memory(void const *p)
 void check_errno(void)
 {
 	if(errno != 0) {
-		log_err("Error: %s\n", strerror(errno));
+		log_err("Error %d: %s\n", errno, strerror(errno));
 		exit(-1);
 	}
 }

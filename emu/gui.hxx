@@ -13,13 +13,12 @@ public:
 	~gui(void);
 
 	QWidget *main_window;
-	QString rom_path;
 
 private slots:
 	void open_file();
 	
 private:
-	uint8_t *rom_file;
+	char *rom_file;
 	
 	QMenuBar *menu_bar;
 	QMenu *file;
@@ -34,6 +33,8 @@ private:
 	QWidget *ram_window;
 
 	QAction *open_action;
+
+	void start_emu(void);
 };
 
 extern "C" {

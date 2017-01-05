@@ -6,11 +6,14 @@
 #include <QString>
 
 #include "emu/gui.hxx"
+
+extern "C" {
 #include "sim/asm.h"
 #include "sim/code.h"
 #include "sim/hex.h"
-
-
+#include "emu/main.h"
+}
+	
 gui::gui(void)
 {
 	//main Window
@@ -23,9 +26,9 @@ gui::gui(void)
 	
 	file = new QMenu(QString::fromUtf8("File"), main_window);
 
-	open_action = new QAction(QString::fromUtf8("Open"), file);
+	open_action = new QAction(QString::fromUtf8("Open"), this);
 	file->addAction(open_action);
-	QObject::connect(open_action, SIGNAL(triggered()), this->main_window, SLOT(open_file()));
+	QObject::connect(open_action, SIGNAL(triggered()), this, SLOT(open_file()));
 	
 	file_info_window = new QWidget();
 	file_info_window->setWindowTitle(QString::fromUtf8("File Info"));
@@ -61,21 +64,26 @@ gui::gui(void)
 
 gui::~gui(void)
 {
-
+        
 }
 
+void gui::start_emu(void)
+{
+	start_nes(rom_file);
+}
 
 void gui::open_file()
 {
 	QString path = QFileDialog::getOpenFileName(main_window,
 						    QString::fromUtf8("Choose a File"),
-						    QString::fromUtf8("/home"),
+						    QString::fromUtf8(""),
 						    QString::fromUtf8("Nes Roms (*.nes)"));
 	if(path != "") {
-		QFile f(path);
-		QByteArray d = f.readAll();
-		rom_file = (uint8_t *)malloc(sizeof(uint8_t) * d.size());
-		memcpy(rom_file, d.data(), d.size());
+		rom_file = path.toLatin1().data();
+		start_emu();
+	}
+	else {
+		printf("No file selected");
 	}
 	
 }

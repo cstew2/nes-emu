@@ -26,8 +26,9 @@ int main(int argc, char **argv)
 		if(!strncmp(argv[i], "-g", 2)) {
 			g_flag = true;
 		}
-		else if(!strncmp(argv[i], "-o", 2)) {
+		else if(!strncmp(argv[i], "-f", 2)) {
 		       i++;
+		       filename = malloc(sizeof(char) * strlen(argv[i]));
 		       strncpy(filename, argv[i], strlen(argv[i]));
 		}
 		else if(!strncmp(argv[i], "--help", 6)) {
@@ -52,7 +53,7 @@ int main(int argc, char **argv)
 	else {
 		debug_message("You need to supply a file path to a iNES rom in order to run in terminal mode.\n"
 			      "Or run in gui mode with \"-g\" to select one from a file browser.\n");
-		printf("Run with -g for gui or supply a path to a rom file\n");
+		printf("Run with -g for gui or supply a path to a rom file with -f\n");
 	}
 	if(d_flag)
 	{
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
 
 void start_nes(char *filename)
 {
-	log_info("Starting nes emulator...");
+	log_info("Starting nes emulator...\n");
 	start_nes_emu(filename);
 
 }
