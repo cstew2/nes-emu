@@ -53,7 +53,8 @@ gui::gui(void)
         registers_window = new QWidget();
 	registers_window->resize(256,240);
 	prog->addAction(QString("Registers"), registers_window, SLOT(show()));
-	
+	register_values = new QTableWidget(2, 14, registers_window);
+		
 	//Ram Window
 	ram_window = new QWidget();
 	ram_window->resize(256,240);

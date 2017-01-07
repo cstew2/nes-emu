@@ -8,7 +8,7 @@ static FILE *fp;
 void debug_init(void)
 {
 	const char *filepath = "./cnes.log";
-	
+	fp = NULL;
 	fp = fopen(filepath, "w");
 }
 

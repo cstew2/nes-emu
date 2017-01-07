@@ -30,6 +30,8 @@ private:
 	QWidget *hex_window;
 	QWidget *code_window;
 	QWidget *registers_window;
+	QTableWidget *register_values; 
+	
 	QWidget *ram_window;
 
 	QAction *open_action;

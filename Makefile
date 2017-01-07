@@ -62,5 +62,5 @@ build: $(OBJ) $(OBJMOCXX) $(OBJXX)
 
 .PHONY: clean
 clean:
-	@rm -f $(OBJ) $(OBJXX) $(MOCXX) $(MOCOBJXX) $(TARGET) cnes.log core
+	@rm -f $(OBJ) $(OBJXX) $(MOCXX) $(OBJMOCXX) $(TARGET) cnes.log core
 	@echo Cleaned $(OBJ) $(OBJXX) $(MOCXX) $(OBJMOCXX) and $(TARGET)

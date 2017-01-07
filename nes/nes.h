@@ -1,5 +1,5 @@
-#ifndef NES_H_
-#define NES_H_
+#ifndef NES_H
+#define NES_H
 
 #include "nes/cpu.h"
 #include "nes/cpu_memory.h"
