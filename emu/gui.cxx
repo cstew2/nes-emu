@@ -12,6 +12,10 @@ extern "C" {
 #include "sim/code.h"
 #include "sim/hex.h"
 #include "emu/main.h"
+#include "emu/debug.h"
+#include "emu/error.h"
+
+#include <pthread.h>
 }
 	
 gui::gui(void)

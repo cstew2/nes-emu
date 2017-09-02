@@ -16,8 +16,7 @@ int main(int argc, char **argv)
 	bool d_flag = false;
 	bool g_flag = false;
 
-	char *filename = calloc(sizeof(char), MAX_BUFFER);
-	filename = NULL;
+	char *filename = NULL;
 	
 	for(int i=1; i < argc; i++) {
 		if(!strncmp(argv[i], "-d", 2)) {
@@ -59,6 +58,7 @@ int main(int argc, char **argv)
 	{
 	    	debug_term();
 	}
+	free(filename);
 	return 0;
 }
 
