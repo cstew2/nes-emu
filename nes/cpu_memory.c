@@ -31,15 +31,15 @@ int load_cpu_rom(cpu_memory_map *m, uint8_t *prg_rom, bool upper, bool lower)
 uint8_t get_cpu_memory(cpu_memory_map *m, uint16_t addr)
 {
 	log_info("INFO: load cpu memory at address: %X\n", addr);
-	if(addr < 8192) { /* main cpu ram */
-		int i = addr % 2048;
-		if(addr < 256) {
+	if(addr < 0x1FFF) { /* main cpu ram */
+		int i = addr % 0x07FF;
+		if(addr < 0x00FF) {
 			return m->zero_page[i];
 		}
-		else if(addr > 256 && addr < 512) {
+		else if(addr > 0x00FF && addr < 0x01FF) {
 			return m->stack_memory[i];
 		}
-		else if(addr > 512 && addr < 2048) {
+		else if(addr > 0x01FF && addr < 0x07FF) {
 			return m->cpu_ram[i];
 		}
 	}

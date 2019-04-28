@@ -4,8 +4,6 @@
 #include "emu/debug.h"
 #include "emu/error.h"
 
-#include "emu/gui.hxx"
-
 nes_emu *init_nes_emu(rom_file *rf)
 {
 	nes_emu *e = malloc(sizeof(nes_emu));
@@ -23,6 +21,14 @@ int main_nes_loop(nes_emu *e)
 		fetch(e->r, e->cm);
 		execute(e->r, e->cm);
 		e->r->ticks++;
+		log_info("INFO: pc:%X, a:%X, x:%X, y:%X, sp:%X, c:%X\n",
+			 e->r->program_counter,
+			 e->r->accumulator,
+			 e->r->x_index,
+			 e->r->y_index,
+			 e->r->stack_pointer,
+			 e->r->condition_codes);
+		sleep(1);
 	}
 	return 0;
 }
@@ -46,14 +52,14 @@ int start_nes_emu(char *filename)
 {
 	if(filename != NULL) {
 		rom_file *rf = load_nes_rom(filename);
-		log_info("Succesfully loaded %s rom\n", filename);
+		log_info("INFO: Succesfully loaded %s rom\n", filename);
 		
 		nes_emu *e = init_nes_emu(rf);
-		log_info("Succesfully initiated the NES cpu core\n");
+		log_info("INFO: Succesfully initiated the NES cpu core\n");
 
-		log_info("Main loop initialised\n");
+		log_info("INFO: Main loop initialised\n");
 		main_nes_loop(e);
-		log_info("Main loop ended\n");
+		log_info("INFO: Main loop ended\n");
 	}
 	
 	return 0;

@@ -9,21 +9,14 @@
 
 #include "nes/nes.h"
 
-#include "emu/gui.hxx"
-
 int main(int argc, char **argv)
 {
 	bool d_flag = false;
-	bool g_flag = false;
-
 	char *filename = NULL;
 	
 	for(int i=1; i < argc; i++) {
 		if(!strncmp(argv[i], "-d", 2)) {
 			d_flag = true;
-		}
-		if(!strncmp(argv[i], "-g", 2)) {
-			g_flag = true;
 		}
 		else if(!strncmp(argv[i], "-f", 2)) {
 		       i++;
@@ -40,19 +33,12 @@ int main(int argc, char **argv)
 		debug_init();
 	}
 
-	//main start point
-	if(g_flag) {
-		//start gui
-		start_gui();
-	}
-	else if(filename != NULL){
+	if(filename != NULL){
 		//start term
 		start_nes(filename);
 	}
 	else {
-		debug_message("You need to supply a file path to a iNES rom in order to run in terminal mode.\n"
-			      "Or run in gui mode with \"-g\" to select one from a file browser.\n");
-		printf("Run with -g for gui or supply a path to a rom file with -f\n");
+		debug_message("You need to supply a file path to a iNES rom in order to run in terminal mode.\n");
 	}
 	if(d_flag)
 	{

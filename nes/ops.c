@@ -20,15 +20,15 @@ uint16_t mem_absolute(cpu_registers *r, cpu_memory_map *cm)
 uint16_t mem_absolute_x(cpu_registers *r, cpu_memory_map *cm)
 {
 	return combine(get_cpu_memory(cm, r->program_counter),
-		       get_cpu_memory(cm, r->program_counter+1)) + r->x_index;
+		       get_cpu_memory(cm, r->program_counter + 0x0001)) + r->x_index;
 }
 
 uint16_t mem_relative(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
-	uint16_t addr = get_cpu_memory(cm, r->program_counter);
-	*boundary = (addr & 0xFF00) != (addr & 0xFF00);
-	
-	return addr;
+	uint8_t addr = get_cpu_memory(cm, r->program_counter);
+	*boundary = (addr & 0xFF00) != ((addr + 0x0001) & 0xFF00);
+
+	return combine(addr, addr+1);
 }
 
 uint16_t mem_indirect(cpu_registers *r, cpu_memory_map *cm)
@@ -53,8 +53,7 @@ uint8_t op_zero_page_x(cpu_registers *r, cpu_memory_map *cm)
 
 uint8_t op_zero_page_y(cpu_registers *r, cpu_memory_map *cm)
 {
-	return get_cpu_memory(cm,
-	      (get_cpu_memory(cm, r->program_counter++) + r->y_index) & 0x00FF);
+	return get_cpu_memory(cm, (get_cpu_memory(cm, r->program_counter++) + r->y_index) & 0x00FF);
 }
 
 uint8_t op_absolute(cpu_registers *r, cpu_memory_map *cm)
@@ -67,7 +66,7 @@ uint8_t op_absolute(cpu_registers *r, cpu_memory_map *cm)
 uint8_t op_absolute_x(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
 	uint16_t addr =  combine(get_cpu_memory(cm, r->program_counter),
-				    get_cpu_memory(cm, r->program_counter+1));
+				 get_cpu_memory(cm, r->program_counter+1));
 	r->program_counter += 2;
 	*boundary = !(((addr + r->x_index) & 0xFF00) == (addr & 0xFF00));
 	return get_cpu_memory(cm, addr + r->x_index);
@@ -76,7 +75,7 @@ uint8_t op_absolute_x(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 uint8_t op_absolute_y(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
         uint16_t addr = combine(get_cpu_memory(cm, r->program_counter),
-				   get_cpu_memory(cm, r->program_counter+1));
+				get_cpu_memory(cm, r->program_counter+1));
 	r->program_counter += 2;
 	*boundary = !(((addr + r->y_index) & 0xFF00) == (addr & 0xFF00));
 	return get_cpu_memory(cm, addr + r->y_index);
