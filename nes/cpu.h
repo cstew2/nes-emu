@@ -16,8 +16,9 @@ typedef struct {
 	uint8_t y_index; /* counter or offset cannot be used to get the stack pointer */
 	uint16_t program_counter;
 	uint8_t stack_pointer;
-	
-	uint8_t condition_codes; /* 0-carry, 1-zero, 2-interrupt, 3-decimal, 4-unused, 5-unused, 6-overflow, 7-negative */
+
+	/* 0-carry, 1-zero, 2-interrupt, 3-decimal, 4-unused, 5-unused, 6-overflow, 7-negative */
+	uint8_t condition_codes; 
 
 	uint64_t ticks;
 	uint8_t instruction;

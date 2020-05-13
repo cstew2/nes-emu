@@ -20,10 +20,9 @@ cpu_registers *cpu_registers_init(void)
 	r->stack_pointer = 0xFD;
 	
 	r->condition_codes = 0;
-	set_field_bit(r->condition_codes, 2, true);
 
 	r->ticks = 0;
-	
+	r->instruction = 0x00;
 	return r;
 }
 
@@ -86,15 +85,15 @@ void cpu_reset(cpu_registers *r)
 {
 	/* default values */ 
 	r->stack_pointer -= 0x03;
-	set_field_bit(r->condition_codes, 2, true);
+	set_interrupt(r, true);
 	return;
 }
 
 int fetch(cpu_registers *r, cpu_memory_map *cm)
 {
 	r->instruction = get_cpu_memory(cm, r->program_counter);
-	set_field_bit(r->condition_codes, 0, false);
-
+	log_msg(INFO, "op: %X\n", r->instruction);
+		
 	r->program_counter++;
 	return 0;
 }
@@ -308,7 +307,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 		
 	case 0xD8://CLD *not used in NES*
-		log_warn("CLD instruction, clear decimial flag, shouldn't be used in the NES");
+		log_msg(WARN, "CLD instruction, clear decimial flag, shouldn't be used in the NES");
 		break;
 		
 	case 0x58://CLI
@@ -330,7 +329,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 
 	case 0xF8://SED
-		log_warn("SED instruction, set decimal flag, shouldn't be use in the NES");
+		log_msg(WARN, "SED instruction, set decimal flag, shouldn't be use in the NES");
 		break;
 		
 	case 0xC9://CMP immediate
@@ -869,7 +868,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 		
 	default://illegal opcode
-		log_warn("Illegal opcode at %X", r->instruction);
+		log_msg(WARN, "Illegal opcode at %X", r->instruction);
 		break;
 	}
 	return counter;

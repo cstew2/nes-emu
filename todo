@@ -1,0 +1,3 @@
+-change audio code to use flags instead of a billion getters and setters
+-add GUI(what API?)
+-

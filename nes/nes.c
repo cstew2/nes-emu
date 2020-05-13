@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "nes/nes.h"
 #include "emu/debug.h"
@@ -20,8 +21,8 @@ int main_nes_loop(nes_emu *e)
 	while(quit) {
 		fetch(e->r, e->cm);
 		execute(e->r, e->cm);
-		e->r->ticks++;
-		log_info("INFO: pc:%X, a:%X, x:%X, y:%X, sp:%X, c:%X\n",
+		e->r->ticks++;	
+		log_msg(INFO, "pc:%X, a:%X, x:%X, y:%X, sp:%X, c:%X\n",
 			 e->r->program_counter,
 			 e->r->accumulator,
 			 e->r->x_index,
@@ -41,9 +42,7 @@ rom_file *load_nes_rom(char *filename)
 	raw = open_rom_file(filename);
 	rom = rom_file_init(raw);
 	
-	if(debug_on) {
-		rom_file_info(rom);
-	}
+	rom_file_info(rom);
 	
 	return rom;
 }
@@ -52,14 +51,14 @@ int start_nes_emu(char *filename)
 {
 	if(filename != NULL) {
 		rom_file *rf = load_nes_rom(filename);
-		log_info("INFO: Succesfully loaded %s rom\n", filename);
+		log_msg(INFO, "Succesfully loaded %s rom\n", filename);
 		
 		nes_emu *e = init_nes_emu(rf);
-		log_info("INFO: Succesfully initiated the NES cpu core\n");
+		log_msg(INFO, "Succesfully initiated the NES cpu core\n");
 
-		log_info("INFO: Main loop initialised\n");
+		log_msg(INFO, "Main loop initialised\n");
 		main_nes_loop(e);
-		log_info("INFO: Main loop ended\n");
+		log_msg(INFO, "Main loop ended\n");
 	}
 	
 	return 0;

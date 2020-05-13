@@ -6,12 +6,12 @@
 
 bool get_field_bit(const uint8_t byte, const uint8_t offset)
 {
-	return ((byte >> offset) & 1);
+	return ((byte >> offset) & 0x01);
 }
 
 void set_field_bit(uint8_t byte, uint8_t const offset, const bool on)
 {
-	byte = ((byte >> offset) & on) << offset;
+	byte &= (on << offset);
 }
 
 uint8_t get_nibble(const uint8_t byte, const bool higher)

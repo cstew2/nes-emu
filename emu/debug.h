@@ -4,15 +4,15 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool debug_on;
+typedef enum {
+	INFO,
+	WARN,
+	ERROR
+}LOG_LEVEL;
 
 /* function prototypes */
-void debug_init(void);
-void debug_term(void);
-
-void debug_message(const char *message, ...);
-void log_info(const char *message, ...);
-void log_warn(const char *message, ...);
-void log_err(const char *message, ...);
+void log_init(bool debug);
+void log_term(void);
+void log_msg(LOG_LEVEL level, const char *fmt, ...);
 
 #endif
