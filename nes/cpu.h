@@ -29,22 +29,22 @@ typedef struct {
 cpu_registers *cpu_registers_init(void);
 void cpu_registers_term(cpu_registers *cr);
 
-void set_carry(cpu_registers *r, bool flag);
-void set_zero(cpu_registers *r, bool flag);
-void set_interrupt(cpu_registers *r, bool flag);
-void set_break(cpu_registers *r, bool flag);
-void set_overflow(cpu_registers *r, bool flag);
-void set_negative(cpu_registers *r, bool flag);
+void set_carry(cpu_registers *r, const bool flag);
+void set_zero(cpu_registers *r, const bool flag);
+void set_interrupt(cpu_registers *r, const bool flag);
+void set_break(cpu_registers *r, const bool flag);
+void set_overflow(cpu_registers *r, const bool flag);
+void set_negative(cpu_registers *r, const bool flag);
 
-bool get_carry(cpu_registers *r);
-bool get_zero(cpu_registers *r);
-bool get_interrupt(cpu_registers *r);
-bool get_break(cpu_registers *r);
-bool get_overflow(cpu_registers *r);
-bool get_negative(cpu_registers *r);
+bool get_carry(const cpu_registers *r);
+bool get_zero(const cpu_registers *r);
+bool get_interrupt(const cpu_registers *r);
+bool get_break(const cpu_registers *r);
+bool get_overflow(const cpu_registers *r);
+bool get_negative(const cpu_registers *r);
 
 void cpu_reset(cpu_registers *r);
-int fetch(cpu_registers *r, cpu_memory_map *cm);
+int fetch(cpu_registers *r, const cpu_memory_map *cm);
 int execute(cpu_registers *r, cpu_memory_map *cm);
 
 #endif

@@ -5,11 +5,6 @@
 
 //ines 2.0 mapper: 000
 //nrom
-static const uin8_t nrom_bank1_start = 0x8000;
-static const uin8_t nrom_bank1_end = 0xBFFF;
-
-static const uin8_t nrom_bank2_start = 0xC000;
-static const uin8_t nrom_bank2_end = 0xFFFF;
-
+void nrom_map(cpu_memory_map *m, cart *c);
 
 #endif

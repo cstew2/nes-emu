@@ -11,7 +11,7 @@
 #include "emu/cart.h"
 
 typedef struct {
-	rom_file *rf;
+	cart *c;
 
 	/* hardware */
 	cpu_registers *r;
@@ -21,9 +21,9 @@ typedef struct {
 }nes_emu;
 
 /* funciton prototypes */
-nes_emu *init_nes_emu(rom_file *rf);
+nes_emu *init_nes_emu(cart *c);
 int main_nes_loop(nes_emu *e);
-rom_file *load_nes_rom(char *filename);
+cart *load_nes_rom(char *filename);
 int start_nes_emu(char *filename);
 
 #endif

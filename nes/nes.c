@@ -4,14 +4,18 @@
 #include "nes/nes.h"
 #include "emu/debug.h"
 #include "emu/error.h"
+#include "emu/fileio.h"
 
-nes_emu *init_nes_emu(rom_file *rf)
+nes_emu *init_nes_emu(cart *c)
 {
-	nes_emu *e = malloc(sizeof(nes_emu));
+	nes_emu *e = calloc(sizeof(nes_emu), 1);
 	check_memory(e);
-	e->rf = rf;
+	e->c = c;
 	e->r = cpu_registers_init();
 	e->cm = cpu_memory_init();
+
+	nrom_map(e->cm, e->c);
+		
 	return e;
 }
 
@@ -29,31 +33,29 @@ int main_nes_loop(nes_emu *e)
 			 e->r->y_index,
 			 e->r->stack_pointer,
 			 e->r->condition_codes);
-		sleep(1);
+		//sleep(1);
 	}
 	return 0;
 }
 
-rom_file *load_nes_rom(char *filename)
+cart *load_nes_rom(char *filename)
 {
-	rom_file *rom;
-	uint8_t *raw;
-       
-	raw = open_rom_file(filename);
-	rom = rom_file_init(raw);
+        uint8_t *raw_file = open_binary_file(filename);
+	cart *c = cart_init(raw_file);
 	
-	rom_file_info(rom);
+        cart_info(c);
+
 	
-	return rom;
+	return c;
 }
 
 int start_nes_emu(char *filename)
 {
 	if(filename != NULL) {
-		rom_file *rf = load_nes_rom(filename);
+		cart *c = load_nes_rom(filename);
 		log_msg(INFO, "Succesfully loaded %s rom\n", filename);
 		
-		nes_emu *e = init_nes_emu(rf);
+		nes_emu *e = init_nes_emu(c);
 		log_msg(INFO, "Succesfully initiated the NES cpu core\n");
 
 		log_msg(INFO, "Main loop initialised\n");

@@ -13,13 +13,13 @@ uint8_t mem_zero_page_x(cpu_registers *r, cpu_memory_map *cm)
 
 uint16_t mem_absolute(cpu_registers *r, cpu_memory_map *cm)
 {
-	return combine(get_cpu_memory(cm, r->program_counter),
-		       get_cpu_memory(cm, r->program_counter+1));
+	return bytes_to_word(get_cpu_memory(cm, r->program_counter),
+			     get_cpu_memory(cm, r->program_counter+1));
 }
 
 uint16_t mem_absolute_x(cpu_registers *r, cpu_memory_map *cm)
 {
-	return combine(get_cpu_memory(cm, r->program_counter),
+	return bytes_to_word(get_cpu_memory(cm, r->program_counter),
 		       get_cpu_memory(cm, r->program_counter + 0x0001)) + r->x_index;
 }
 
@@ -28,16 +28,16 @@ uint16_t mem_relative(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 	uint8_t addr = get_cpu_memory(cm, r->program_counter);
 	*boundary = (addr & 0xFF00) != ((addr + 0x0001) & 0xFF00);
 
-	return combine(addr, addr+1);
+	return bytes_to_word(addr, addr+1);
 }
 
 uint16_t mem_indirect(cpu_registers *r, cpu_memory_map *cm)
 {
-	uint16_t addr = combine(get_cpu_memory(cm, r->program_counter),
+	uint16_t addr = bytes_to_word(get_cpu_memory(cm, r->program_counter),
 				get_cpu_memory(cm, r->program_counter+1) & 0xFF);
 	//indirect jmp bug
 	r->program_counter =+ 2;
-	return combine(addr, ((addr + 1) & 0xFF));
+	return bytes_to_word(addr, ((addr + 1) & 0xFF));
 }
 
 /* addressing modes */
@@ -65,7 +65,7 @@ uint8_t op_absolute(cpu_registers *r, cpu_memory_map *cm)
 
 uint8_t op_absolute_x(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
-	uint16_t addr =  combine(get_cpu_memory(cm, r->program_counter),
+	uint16_t addr =  bytes_to_word(get_cpu_memory(cm, r->program_counter),
 				 get_cpu_memory(cm, r->program_counter+1));
 	r->program_counter += 2;
 	*boundary = !(((addr + r->x_index) & 0xFF00) == (addr & 0xFF00));
@@ -74,7 +74,7 @@ uint8_t op_absolute_x(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 
 uint8_t op_absolute_y(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
-        uint16_t addr = combine(get_cpu_memory(cm, r->program_counter),
+        uint16_t addr = bytes_to_word(get_cpu_memory(cm, r->program_counter),
 				get_cpu_memory(cm, r->program_counter+1));
 	r->program_counter += 2;
 	*boundary = !(((addr + r->y_index) & 0xFF00) == (addr & 0xFF00));
@@ -83,11 +83,11 @@ uint8_t op_absolute_y(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 
 uint16_t op_indirect(cpu_registers *r, cpu_memory_map *cm)
 {
-	uint16_t addr = combine(
+	uint16_t addr = bytes_to_word(
 		get_cpu_memory(cm, r->program_counter),
 		get_cpu_memory(cm, r->program_counter+1));
 	r->program_counter += 2;
-        return combine(
+        return bytes_to_word(
 		get_cpu_memory(cm, addr),
 		get_cpu_memory(cm, addr+1));
 }
@@ -100,7 +100,7 @@ uint8_t op_immediate(cpu_registers *r, cpu_memory_map *cm)
 uint8_t op_indirect_x(cpu_registers *r, cpu_memory_map *cm)
 {
         uint16_t addr = (get_cpu_memory(cm, r->program_counter++) + r->x_index) & 0xFF;
-	return get_cpu_memory(cm, combine(get_cpu_memory(cm, addr),
+	return get_cpu_memory(cm, bytes_to_word(get_cpu_memory(cm, addr),
 					  get_cpu_memory(cm, addr+1)));
 }
 
@@ -108,7 +108,7 @@ uint8_t op_indirect_y(cpu_registers *r, cpu_memory_map *cm, bool *boundary)
 {
 	uint16_t addr = get_cpu_memory(cm, r->program_counter++);
 	*boundary = !(((addr + r->y_index) & 0xFF00) == (addr & 0xFF00));
-	return get_cpu_memory(cm, combine(addr, addr+1)) + r->y_index;
+	return get_cpu_memory(cm, bytes_to_word(addr, addr+1)) + r->y_index;
 }
 
 

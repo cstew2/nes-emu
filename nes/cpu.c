@@ -31,52 +31,52 @@ void cpu_registers_term(cpu_registers *cr)
 	free(cr);
 }
 
-void set_carry(cpu_registers *r, bool flag)
+void set_carry(cpu_registers *r, const bool flag)
 {
 	set_field_bit(r->condition_codes, 0, flag);
 }
-void set_zero(cpu_registers *r, bool flag)
+void set_zero(cpu_registers *r, const bool flag)
 {
 	set_field_bit(r->condition_codes, 1, flag);
 }
-void set_interrupt(cpu_registers *r, bool flag)
+void set_interrupt(cpu_registers *r, const bool flag)
 {
 	set_field_bit(r->condition_codes, 2, flag);
 }
-void set_break(cpu_registers *r, bool flag)
+void set_break(cpu_registers *r, const bool flag)
 {
 	set_field_bit(r->condition_codes, 4, flag);
 }
-void set_overflow(cpu_registers *r, bool flag)
+void set_overflow(cpu_registers *r, const bool flag)
 {
 	set_field_bit(r->condition_codes, 6, flag);
 }
-void set_negative(cpu_registers *r, bool flag)
+void set_negative(cpu_registers *r, const bool flag)
 {
 	set_field_bit(r->condition_codes, 7, flag);
 }
 
-bool get_carry(cpu_registers *r)
+bool get_carry(const cpu_registers *r)
 {
 	return get_field_bit(r->condition_codes, 0);
 }
-bool get_zero(cpu_registers *r)
+bool get_zero(const cpu_registers *r)
 {
 	return get_field_bit(r->condition_codes, 1);
 }
-bool get_interrupt(cpu_registers *r)
+bool get_interrupt(const cpu_registers *r)
 {
 	return get_field_bit(r->condition_codes, 2);
 }
-bool get_break(cpu_registers *r)
+bool get_break(const cpu_registers *r)
 {
 	return get_field_bit(r->condition_codes, 4);
 }
-bool get_overflow(cpu_registers *r)
+bool get_overflow(const cpu_registers *r)
 {
 	return get_field_bit(r->condition_codes, 6);
 }
-bool get_negative(cpu_registers *r)
+bool get_negative(const cpu_registers *r)
 {
 	return get_field_bit(r->condition_codes, 7);
 }
@@ -89,7 +89,7 @@ void cpu_reset(cpu_registers *r)
 	return;
 }
 
-int fetch(cpu_registers *r, cpu_memory_map *cm)
+int fetch(cpu_registers *r, const cpu_memory_map *cm)
 {
 	r->instruction = get_cpu_memory(cm, r->program_counter);
 	log_msg(INFO, "op: %X\n", r->instruction);
@@ -329,7 +329,7 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		break;
 
 	case 0xF8://SED
-		log_msg(WARN, "SED instruction, set decimal flag, shouldn't be use in the NES");
+		log_msg(WARN, "SED instruction, set decimal flag, shouldn't be use in the NES\n");
 		break;
 		
 	case 0xC9://CMP immediate
@@ -854,21 +854,21 @@ int execute(cpu_registers *r, cpu_memory_map *cm)
 		
 	case 0x4D://RTI
 		r->condition_codes = get_cpu_memory(cm, r->stack_pointer--);
-		r->program_counter = combine(get_cpu_memory(cm, r->stack_pointer),
+		r->program_counter = bytes_to_word(get_cpu_memory(cm, r->stack_pointer),
 					     get_cpu_memory(cm, r->stack_pointer-1));
 		r->stack_pointer -= 2;
 		counter -= 6;
 		break;
 			
 	case 0x60://RTS
-		r->program_counter = combine(get_cpu_memory(cm, r->stack_pointer),
+		r->program_counter = bytes_to_word(get_cpu_memory(cm, r->stack_pointer),
 					     get_cpu_memory(cm, r->stack_pointer-1));
 		r->stack_pointer -= 2;
 		counter -= 6;
 		break;
 		
 	default://illegal opcode
-		log_msg(WARN, "Illegal opcode at %X", r->instruction);
+		log_msg(WARN, "Illegal opcode %X at %X\n", r->instruction, r->program_counter);
 		break;
 	}
 	return counter;

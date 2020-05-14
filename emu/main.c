@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 		else if(!strncmp(argv[i], "-f", 2)) {
 		       i++;
 		       int len = strlen(argv[i])+1;
-		       filename = malloc(sizeof(char) * len);
+		       filename = calloc(sizeof(char), len);
 		       strncpy(filename, argv[i], len);
 		}
 		else if(!strncmp(argv[i], "--help", 6)) {
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
 void start_nes(char *filename)
 {
-	log_msg(INFO, "Starting nes emulator...\n");
+	log_msg(INFO, "Starting nes emulator\n");
 	start_nes_emu(filename);
 
 }
