@@ -49,6 +49,4 @@ cart *cart_init(const uint8_t *raw_file);
 void cart_del(cart *c);
 int cart_info(const cart *data);
 
-
-
 #endif

@@ -73,8 +73,6 @@ cart *cart_init(const uint8_t *raw_file)
 		r->bus_conflict = get_field_bit(raw_file[10], 5);
 	}
 
-	uint8_t mapper = bytes_to_word(r->low_mapper, r->high_mapper);
-
 	if(r->trainer_exists) {
 		r->trainer_rom = raw_file + 0x10;
 		r->cart_rom = raw_file + 0x210;

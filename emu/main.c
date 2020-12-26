@@ -15,16 +15,16 @@ int main(int argc, char **argv)
 	char *filename = NULL;
 	
 	for(int i=1; i < argc; i++) {
-		if(!strncmp(argv[i], "-d", 2)) {
+		if(!strncmp(argv[i], "-d", 2) || !strncmp(argv[i], "--debug", 7)) {
 			d_flag = true;
 		}
-		else if(!strncmp(argv[i], "-f", 2)) {
+		else if(!strncmp(argv[i], "-f", 2) || !strncmp(argv[i], "--file", 6)) {
 		       i++;
 		       int len = strlen(argv[i])+1;
 		       filename = calloc(sizeof(char), len);
 		       strncpy(filename, argv[i], len);
 		}
-		else if(!strncmp(argv[i], "--help", 6)) {
+		else if(!strncmp(argv[i], "-h", 2) || !strncmp(argv[i], "--help", 6)) {
 			print_help();
 		}
 	}
@@ -33,19 +33,21 @@ int main(int argc, char **argv)
 		log_init(true);
 	}
 
-	if(filename != NULL){
-		//start term
+	if(filename != NULL) {
+		//start emulator
 		start_nes(filename);
 	}
 	else {
 		log_msg(ERROR, "You need to supply a file path to a iNES rom in order to run in terminal mode.\n");
 	}
 	
-	if(d_flag)
-	{
+	if(d_flag) {
 	    	log_term();
 	}
-	free(filename);
+	if(filename) {
+		free(filename);
+	}
+	
 	return 0;
 }
 
@@ -58,9 +60,10 @@ void start_nes(char *filename)
 
 void print_help(void)
 {
-	printf("nes usage: nes [OPTIONS]...\n\n"
+	printf("cnes usage: cnes [OPTIONS]...\n\n"
 	       "Options\n"
-	       "-d \t debug on\n"
-	       "-f \t open \"FILE\"\n"
-		"");
+	       "-d \t --debug \t debug on\n"
+	       "-f \t --file \t open \"FILE\"\n"
+	       "-h \t --help \t display help information"
+	       "");
 }

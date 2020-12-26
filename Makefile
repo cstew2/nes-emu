@@ -6,15 +6,15 @@ CC              = gcc
 CXX		= g++
 
 CFLAGS          := -std=c11 -I./ 
-CXXFLAGS	:= -std=c++11 -fPIC -I./ -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore \
+CXXFLAGS	:= -std=c++11 -I./ -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore \
 		   -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets
 
 DCFLAGS         := -g -ggdb3 -O0 -Wall -pedantic -Wextra -Wundef -Wshadow \
-                  -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wwrite-strings \
-                  -Wswitch-default -Wswitch-enum \
-                  -Wunreachable-code -Winit-self
+                   -Wpointer-arith -Wcast-align -Wstrict-prototypes -Wwrite-strings \
+                   -Wswitch-default -Wswitch-enum \
+                   -Wunreachable-code -Winit-self
 
-RCFLAGS         := -O2 -fwhole-program
+RCFLAGS         := -O3 -fwhole-program -flto -march=native
 
 LDFLAGS		:= 
 

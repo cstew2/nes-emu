@@ -22,8 +22,11 @@ typedef struct{
 	uint8_t *io_registers;
 	
         /* cart address space $4020-$FFFF 49119 bytes */
+	//$4020-$5FFF
+	uint8_t *prg_ram;
+	
 	//$6000-$7FFF PRG RAM or NVRAM
-	uint8_t * prg_ram;
+	uint8_t *prg_nvram;
 	
 	//$8000-$FFFF PRG space
 	//$8000-$BFFF
@@ -39,6 +42,7 @@ typedef struct{
 
 /* function prototypes */
 cpu_memory_map *cpu_memory_init(void);
+void cpu_memory_term(cpu_memory_map *cm);
 
 uint8_t get_cpu_memory(const cpu_memory_map *m, const uint16_t addr);
 int set_cpu_memory(cpu_memory_map *m, const uint16_t addr, const uint8_t write);

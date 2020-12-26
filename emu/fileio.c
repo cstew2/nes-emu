@@ -9,7 +9,9 @@ uint8_t *open_binary_file(const char *filename)
 {
 	log_msg(INFO, "Reading %s\n", filename);
 	
-	check_memory(filename);
+	if(!filename) {
+		log_msg(ERROR, "null filename passed");
+	}
 	FILE *f = NULL;
 	size_t size = 0;
 	f = fopen(filename, "rb");

@@ -25,5 +25,6 @@ nes_emu *init_nes_emu(cart *c);
 int main_nes_loop(nes_emu *e);
 cart *load_nes_rom(char *filename);
 int start_nes_emu(char *filename);
+int reset_nes_emu(nes_emu *e);
 
 #endif

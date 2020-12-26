@@ -49,30 +49,22 @@ void log_msg(LOG_LEVEL level, const char *fmt, ...)
 			int size = ((sizeof(char) * strlen(fmt)) +
 				    (sizeof(char) * 12) +
 				    (sizeof(char) * strlen(LOG_DATE)));
-			char *mod_fmt = malloc(size);
+			char mod_fmt[size];
 			switch(level) {
  			case INFO:
-				strcpy(mod_fmt, LOG_DATE);
-				strcat(mod_fmt, " - INFO: ");
-				strcat(mod_fmt, fmt);
+				sprintf(mod_fmt, "%s, - INFO: %s", LOG_DATE, fmt);
 				vfprintf(stdout, mod_fmt, args);
 				break;
 			case WARN:
-				strcpy(mod_fmt, LOG_DATE);
-				strcat(mod_fmt, " - WARN: ");
-				strcat(mod_fmt, fmt);
+				sprintf(mod_fmt, "%s, - WARN: %s", LOG_DATE, fmt);
 				vfprintf(stdout, mod_fmt, args);
 				break;
 			case ERROR:
-				strcpy(mod_fmt, LOG_DATE);
-				strcat(mod_fmt, " - ERROR: ");
-				strcat(mod_fmt, fmt);
+				sprintf(mod_fmt, "%s, - ERROR: %s", LOG_DATE, fmt);
 				vfprintf(stderr, mod_fmt, args);
 				break;
 			default:
-				strcpy(mod_fmt, LOG_DATE);
-				strcat(mod_fmt, " - INFO: ");
-				strcat(mod_fmt, fmt);
+			        sprintf(mod_fmt, "%s, - INFO: %s", LOG_DATE, fmt);
 				vfprintf(stdout, mod_fmt, args);
 				break;
 			}
@@ -81,7 +73,6 @@ void log_msg(LOG_LEVEL level, const char *fmt, ...)
 			        vfprintf(LOG_FP, mod_fmt, file_args); 
 			}
 			va_end(file_args);
-			free(mod_fmt);
 		}
 	}
 }

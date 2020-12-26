@@ -5,6 +5,7 @@
 #include "emu/debug.h"
 #include "emu/error.h"
 #include "emu/fileio.h"
+#include "mappers/mappers.h"
 
 nes_emu *init_nes_emu(cart *c)
 {
@@ -15,7 +16,9 @@ nes_emu *init_nes_emu(cart *c)
 	e->cm = cpu_memory_init();
 
 	nrom_map(e->cm, e->c);
-		
+
+	reset_nes_emu(e);
+	
 	return e;
 }
 
@@ -24,6 +27,7 @@ int main_nes_loop(nes_emu *e)
  	bool quit = true;
 	while(quit) {
 		fetch(e->r, e->cm);
+		decode(e->r, e->cm);
 		execute(e->r, e->cm);
 		e->r->ticks++;	
 		log_msg(INFO, "pc:%X, a:%X, x:%X, y:%X, sp:%X, c:%X\n",
@@ -33,7 +37,7 @@ int main_nes_loop(nes_emu *e)
 			 e->r->y_index,
 			 e->r->stack_pointer,
 			 e->r->condition_codes);
-		//sleep(1);
+		sleep(1);
 	}
 	return 0;
 }
@@ -64,4 +68,14 @@ int start_nes_emu(char *filename)
 	}
 	
 	return 0;
+}
+
+int reset_nes_emu(nes_emu *e)
+{
+	if(e->c == NULL) {
+		log_msg(WARN, "No Rom file loaded\n");
+		return 0;
+	}
+
+	e->r->program_counter = *e->cm->reset_vector;
 }
